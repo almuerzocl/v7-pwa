@@ -86,7 +86,7 @@ export function MobileNav() {
 
             {/* Bottom nav */}
             <div className="fixed bottom-0 left-0 z-[20000] w-full h-[68px] sm:h-16 bg-background/95 backdrop-blur border-t border-border pb-safe">
-                <div className="grid h-full max-w-lg grid-cols-4 mx-auto font-medium">
+                <nav aria-label="Navegación principal" className="grid h-full max-w-lg grid-cols-4 mx-auto font-medium">
                     {navItems.map((item) => {
                         const isActive = pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href));
                         const Icon = item.icon;
@@ -94,6 +94,7 @@ export function MobileNav() {
                             <Link
                                 key={item.href}
                                 href={item.href}
+                                aria-current={isActive ? "page" : undefined}
                                 className={`inline-flex flex-col items-center justify-center hover:bg-muted group ${
                                     isActive ? "text-primary" : "text-muted-foreground"
                                 }`}
@@ -120,6 +121,8 @@ export function MobileNav() {
                     {/* Notifications button */}
                     <button
                         onClick={() => setShowNotifications(!showNotifications)}
+                        aria-expanded={showNotifications}
+                        aria-label={unreadCount > 0 ? `Alertas, ${unreadCount} sin leer` : "Alertas"}
                         className={`inline-flex flex-col items-center justify-center hover:bg-muted group ${
                             showNotifications ? "text-primary" : "text-muted-foreground"
                         }`}
@@ -140,7 +143,7 @@ export function MobileNav() {
                             Alertas
                         </span>
                     </button>
-                </div>
+                </nav>
             </div>
         </>
     );
