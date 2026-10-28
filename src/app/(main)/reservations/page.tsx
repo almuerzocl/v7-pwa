@@ -219,24 +219,24 @@ function ReservationRow({
                                 {res.restaurant?.name || "Restaurante"}
                             </h3>
                             {!isOrganizer && (
-                                <span className="text-[10px] text-primary font-semibold">Soy invitado</span>
+                                <span className="text-xs text-primary font-semibold">Soy invitado</span>
                             )}
                         </div>
                         <span
-                            className={`shrink-0 text-[9px] font-bold px-2 py-0.5 rounded-full border ${getBusinessStatusStyles(res.status)}`}
+                            className={`shrink-0 text-xs font-bold px-2 py-0.5 rounded-full border ${getBusinessStatusStyles(res.status)}`}
                         >
                             {getBusinessStatusLabel(res.status, "RESERVATION")}
                         </span>
                     </div>
 
                     {res.restaurant?.address && (
-                        <p className="flex items-center gap-1 text-[11px] text-muted-foreground mb-2.5 truncate">
+                        <p className="flex items-center gap-1 text-xs text-muted-foreground mb-2.5 truncate">
                             <MapPin className="w-3 h-3 shrink-0" />
                             <span className="truncate">{formatAddress(res.restaurant.address)}</span>
                         </p>
                     )}
 
-                    <div className="flex flex-wrap gap-3 text-[11px] font-medium text-foreground/70">
+                    <div className="flex flex-wrap gap-3 text-xs font-medium text-foreground/70">
                         <span className="flex items-center gap-1">
                             <Calendar className="w-3.5 h-3.5 text-primary" />
                             {res.date_time
@@ -261,7 +261,7 @@ function ReservationRow({
                     {canCalendar && (
                         <button
                             onClick={handleCalendar}
-                            className="text-[9px] font-bold px-2 py-2 rounded-xl bg-primary/10 text-primary hover:bg-primary/20 transition-colors flex flex-col items-center gap-0.5"
+                            className="text-xs font-bold px-2 py-2 rounded-xl bg-primary/10 text-primary hover:bg-primary/20 transition-colors flex flex-col items-center gap-0.5"
                         >
                             <CalendarPlus className="w-4 h-4" />
                             Calendario
@@ -271,7 +271,7 @@ function ReservationRow({
                         <button
                             onClick={handleCheckIn}
                             disabled={checkingIn}
-                            className="text-[9px] font-bold px-2 py-2 rounded-xl bg-emerald-100 text-emerald-700 hover:bg-emerald-200 transition-colors flex flex-col items-center gap-0.5 disabled:opacity-50"
+                            className="text-xs font-bold px-2 py-2 rounded-xl bg-emerald-100 text-emerald-700 hover:bg-emerald-200 transition-colors flex flex-col items-center gap-0.5 disabled:opacity-50"
                         >
                             <CheckCircle2 className="w-4 h-4" />
                             {checkingIn ? "..." : "Check-in"}
@@ -281,14 +281,14 @@ function ReservationRow({
                         <button
                             onClick={handleCancel}
                             disabled={cancelling}
-                            className="text-[9px] font-bold px-2 py-2 rounded-xl bg-rose-50 text-rose-600 hover:bg-rose-100 transition-colors flex flex-col items-center gap-0.5 disabled:opacity-50"
+                            className="text-xs font-bold px-2 py-2 rounded-xl bg-rose-50 text-rose-600 hover:bg-rose-100 transition-colors flex flex-col items-center gap-0.5 disabled:opacity-50"
                         >
                             <XCircle className="w-4 h-4" />
                             {cancelling ? "..." : "Cancelar"}
                         </button>
                     )}
                     {!hasActions && (
-                        <span className="text-[9px] text-muted-foreground text-center">—</span>
+                        <span className="text-xs text-muted-foreground text-center">—</span>
                     )}
                 </div>
             </div>
@@ -447,7 +447,7 @@ export default function ReservationsPage() {
                     </h1>
                 </div>
                 {reputation !== null && (
-                    <span className="bg-green-100 text-green-700 text-[10px] font-bold px-3 py-1.5 rounded-full border border-green-200 flex items-center gap-1.5">
+                    <span className="bg-green-100 text-green-700 text-xs font-bold px-3 py-1.5 rounded-full border border-green-200 flex items-center gap-1.5">
                         <Star className="w-3 h-3 fill-green-500 text-green-500" />
                         {formatReputation(reputation)}
                     </span>
@@ -463,7 +463,7 @@ export default function ReservationsPage() {
                         <button
                             key={v}
                             onClick={() => setView(v)}
-                            className={`flex-1 py-2 rounded-xl text-[11px] font-bold transition-all flex items-center justify-center gap-1 ${
+                            className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1 ${
                                 view === v
                                     ? "bg-background shadow-sm text-foreground"
                                     : "text-muted-foreground hover:text-foreground/70"
@@ -471,7 +471,7 @@ export default function ReservationsPage() {
                         >
                             {label}
                             {!loading && count > 0 && (
-                                <span className={`text-[9px] font-black px-1.5 py-0.5 rounded-full ${
+                                <span className={`text-xs font-black px-1.5 py-0.5 rounded-full ${
                                     view === v ? "bg-primary text-white" : "bg-muted-foreground/20 text-muted-foreground"
                                 }`}>
                                     {count}
@@ -488,7 +488,7 @@ export default function ReservationsPage() {
                     <button
                         key={r}
                         onClick={() => setRole(r)}
-                        className={`flex-1 py-2 rounded-xl text-[11px] font-bold transition-all ${
+                        className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all ${
                             role === r
                                 ? "bg-background shadow-sm text-foreground"
                                 : "text-muted-foreground hover:text-foreground/70"
@@ -505,7 +505,7 @@ export default function ReservationsPage() {
                     <p className="text-xs font-bold text-rose-700 flex-1">{fetchError}</p>
                     <button
                         onClick={fetchAll}
-                        className="text-[11px] font-black text-rose-600 underline underline-offset-2 shrink-0"
+                        className="text-xs font-black text-rose-600 underline underline-offset-2 shrink-0"
                     >
                         Reintentar
                     </button>

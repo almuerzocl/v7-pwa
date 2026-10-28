@@ -184,13 +184,13 @@ export function RestaurantCard({
                 {/* Badges Flotantes Superiores */}
                 <div className="absolute top-2 left-2 flex flex-col gap-1 items-start">
                     {restaurant.isSponsored && (
-                        <Badge variant="default" className="bg-primary hover:bg-primary/90 shadow-sm space-x-1 px-1.5 py-0 text-[9px]">
+                        <Badge variant="default" className="bg-primary hover:bg-primary/90 shadow-sm space-x-1 px-1.5 py-0 text-xs">
                             <Ticket className="w-2.5 h-2.5" />
                             <span>Promo</span>
                         </Badge>
                     )}
                     {restaurant.isFeatured && (
-                        <Badge variant="secondary" className="bg-white/95 text-primary hover:bg-white shadow-sm space-x-1 px-1.5 py-0 text-[9px]">
+                        <Badge variant="secondary" className="bg-white/95 text-primary hover:bg-white shadow-sm space-x-1 px-1.5 py-0 text-xs">
                             <Flame className="w-2.5 h-2.5 text-orange-500" />
                             <span>Destacado</span>
                         </Badge>
@@ -207,7 +207,7 @@ export function RestaurantCard({
                 </div>
 
                 {!restaurant.isActive ? (
-                    <Badge variant="destructive" className="absolute top-2 right-2 shadow-sm text-[9px] px-1.5 py-0 z-10">
+                    <Badge variant="destructive" className="absolute top-2 right-2 shadow-sm text-xs px-1.5 py-0 z-10">
                         Cerrado
                     </Badge>
                 ) : (
@@ -264,9 +264,9 @@ export function RestaurantCard({
                         {restaurant.name}
                     </CardTitle>
                     <div className="flex items-center gap-1.5 mt-0.5 text-xs text-muted-foreground">
-                        <span className="text-[10px] truncate max-w-[80px]">{restaurant.cuisineType}</span>
+                        <span className="text-xs truncate max-w-[80px]">{restaurant.cuisineType}</span>
                         <span className="text-muted-foreground/40">•</span>
-                        <span className="text-[10px] tracking-wider font-medium">{renderPriceLevel(restaurant.priceLevel)}</span>
+                        <span className="text-xs tracking-wider font-medium">{renderPriceLevel(restaurant.priceLevel)}</span>
                     </div>
                 </div>
             </CardHeader>
@@ -274,12 +274,12 @@ export function RestaurantCard({
             {/* 3. CONTENIDO PRINCIPAL */}
             <CardContent className="px-3 py-1.5 flex-grow space-y-2">
                 {/* Ocultamos descripción intermedio en móvil, limitamos espacio */}
-                <p className="text-[11px] text-muted-foreground line-clamp-1 sm:line-clamp-2 leading-tight">
+                <p className="text-xs text-muted-foreground line-clamp-1 sm:line-clamp-2 leading-tight">
                     {restaurant.description}
                 </p>
 
                 <div className="space-y-1">
-                    <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
+                    <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                         <MapPin className="w-3 h-3 text-primary/70 shrink-0" />
                         <span className="line-clamp-1">{restaurant.address}, <strong className="font-medium text-foreground">{restaurant.comuna}</strong></span>
                     </div>
@@ -291,21 +291,21 @@ export function RestaurantCard({
 
                 <div className="flex gap-1.5">
                     {restaurant.hasReservations ? (
-                        <span className="flex items-center text-[9px] uppercase font-semibold text-primary/80 bg-primary/10 px-1.5 py-0.5 rounded">
+                        <span className="flex items-center text-xs uppercase font-semibold text-primary/80 bg-primary/10 px-1.5 py-0.5 rounded">
                             <CalendarCheck className="w-2.5 h-2.5 mr-0.5" /> Reserva
                         </span>
                     ) : (
-                        <span className="text-[9px] uppercase font-semibold text-muted-foreground/40 px-1.5 py-0.5 border border-dashed border-border/50 rounded line-through">
+                        <span className="text-xs uppercase font-semibold text-muted-foreground/40 px-1.5 py-0.5 border border-dashed border-border/50 rounded line-through">
                             Reserva
                         </span>
                     )}
 
                     {restaurant.hasTakeaway ? (
-                        <span className="flex items-center text-[9px] uppercase font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">
+                        <span className="flex items-center text-xs uppercase font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">
                             <ShoppingBag className="w-2.5 h-2.5 mr-0.5" /> Llevar
                         </span>
                     ) : (
-                        <span className="text-[9px] uppercase font-semibold text-muted-foreground/40 px-1.5 py-0.5 border border-dashed border-border/50 rounded line-through">
+                        <span className="text-xs uppercase font-semibold text-muted-foreground/40 px-1.5 py-0.5 border border-dashed border-border/50 rounded line-through">
                             Llevar
                         </span>
                     )}
@@ -313,7 +313,7 @@ export function RestaurantCard({
 
                 <div className="flex items-center gap-2">
                     {walkingInfo && (
-                        <div className="flex items-center gap-0.5 text-[9px] font-bold text-sky-600 bg-sky-50 px-1.5 py-0.5 rounded border border-sky-100">
+                        <div className="flex items-center gap-0.5 text-xs font-bold text-sky-600 bg-sky-50 px-1.5 py-0.5 rounded border border-sky-100">
                             <PersonStanding className="w-2.5 h-2.5 shrink-0" />
                             <span>{walkingInfo.dist}</span>
                             <span className="text-sky-400 font-normal">·</span>
@@ -321,7 +321,7 @@ export function RestaurantCard({
                         </div>
                     )}
                     {restaurant.hasTakeaway && (
-                        <div className="flex items-center gap-1 text-[9px] font-medium text-muted-foreground">
+                        <div className="flex items-center gap-1 text-xs font-medium text-muted-foreground">
                             <Clock className="w-2.5 h-2.5" />
                             ~{restaurant.averagePrepTimeMinutes}m
                         </div>

@@ -34,7 +34,7 @@ export function MobileNav() {
                                 {unreadCount > 0 && (
                                     <button
                                         onClick={() => markAllAsRead()}
-                                        className="text-[10px] text-primary font-bold uppercase hover:text-primary/70 transition-colors"
+                                        className="text-xs text-primary font-bold uppercase hover:text-primary/70 transition-colors"
                                     >
                                         Marcar leídas
                                     </button>
@@ -67,8 +67,8 @@ export function MobileNav() {
                                                     <p className={`text-xs font-bold ${!notification.is_read ? "text-foreground" : "text-muted-foreground"}`}>
                                                         {notification.title}
                                                     </p>
-                                                    <p className="text-[11px] text-muted-foreground leading-snug">{notification.message}</p>
-                                                    <p className="text-[9px] text-muted-foreground/70 uppercase font-bold tracking-wider pt-0.5">
+                                                    <p className="text-xs text-muted-foreground leading-snug">{notification.message}</p>
+                                                    <p className="text-xs text-muted-foreground/70 uppercase font-bold tracking-wider pt-0.5">
                                                         {notification.created_at
                                                             ? format(new Date(notification.created_at), "dd MMM HH:mm", { locale: es })
                                                             : "Ahora"}
@@ -103,12 +103,12 @@ export function MobileNav() {
                                         isActive ? "text-primary fill-primary/10" : "text-muted-foreground group-hover:text-primary/80"
                                     }`} />
                                     {!!item.badge && item.badge > 0 && (
-                                        <span className="absolute -top-1 -right-2 bg-primary text-white text-[9px] font-bold min-w-[14px] h-[14px] rounded-full flex items-center justify-center border border-background px-0.5">
+                                        <span className="absolute -top-1 -right-2 bg-primary text-white text-xs font-bold min-w-[14px] h-[14px] rounded-full flex items-center justify-center border border-background px-0.5">
                                             {item.badge}
                                         </span>
                                     )}
                                 </div>
-                                <span className={`text-[9.5px] tracking-tight ${
+                                <span className={`text-xs tracking-tight ${
                                     isActive ? "text-primary font-bold" : "text-muted-foreground font-medium group-hover:text-primary/80"
                                 }`}>
                                     {item.name}
@@ -129,12 +129,12 @@ export function MobileNav() {
                                 showNotifications ? "text-primary fill-primary/10" : "text-muted-foreground group-hover:text-primary/80"
                             }`} />
                             {unreadCount > 0 && (
-                                <span className="absolute -top-1 -right-2 bg-red-500 text-white text-[9px] font-bold min-w-[14px] h-[14px] rounded-full flex items-center justify-center border border-background px-0.5">
+                                <span className="absolute -top-1 -right-2 bg-red-500 text-white text-xs font-bold min-w-[14px] h-[14px] rounded-full flex items-center justify-center border border-background px-0.5">
                                     {unreadCount}
                                 </span>
                             )}
                         </div>
-                        <span className={`text-[9.5px] tracking-tight ${
+                        <span className={`text-xs tracking-tight ${
                             showNotifications ? "text-primary font-bold" : "text-muted-foreground font-medium group-hover:text-primary/80"
                         }`}>
                             Alertas

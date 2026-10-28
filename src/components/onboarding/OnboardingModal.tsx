@@ -269,7 +269,7 @@ export function OnboardingModal() {
                         <button
                             onClick={handleSkipAll}
                             disabled={saving}
-                            className="text-[11px] font-bold text-muted-foreground hover:text-foreground transition-colors uppercase tracking-wider"
+                            className="min-h-11 px-3 text-xs font-bold text-slate-600 hover:text-foreground transition-colors uppercase tracking-wider"
                         >
                             Completar después
                         </button>
@@ -311,7 +311,7 @@ export function OnboardingModal() {
                                     </div>
                                 ))}
                             </div>
-                            <p className="text-[11px] text-muted-foreground">
+                            <p className="text-xs text-muted-foreground">
                                 Conectado como <span className="font-bold">{user?.email}</span>
                             </p>
                         </div>
@@ -328,7 +328,7 @@ export function OnboardingModal() {
                             <div className="space-y-4">
                                 <div className="grid grid-cols-2 gap-3">
                                     <div className="space-y-1.5">
-                                        <Label className="text-[10px] uppercase tracking-wider font-bold text-muted-foreground">
+                                        <Label className="text-xs uppercase tracking-wider font-bold text-muted-foreground">
                                             Nombre <span className="text-destructive">*</span>
                                         </Label>
                                         <Input
@@ -340,7 +340,7 @@ export function OnboardingModal() {
                                         />
                                     </div>
                                     <div className="space-y-1.5">
-                                        <Label className="text-[10px] uppercase tracking-wider font-bold text-muted-foreground">
+                                        <Label className="text-xs uppercase tracking-wider font-bold text-muted-foreground">
                                             Apellido <span className="text-destructive">*</span>
                                         </Label>
                                         <Input
@@ -353,7 +353,7 @@ export function OnboardingModal() {
                                 </div>
 
                                 <div className="space-y-1.5">
-                                    <Label className="text-[10px] uppercase tracking-wider font-bold text-muted-foreground">
+                                    <Label className="text-xs uppercase tracking-wider font-bold text-muted-foreground">
                                         Nombre público / Alias <span className="text-muted-foreground/50 normal-case tracking-normal font-normal">(opcional)</span>
                                     </Label>
                                     <Input
@@ -365,7 +365,7 @@ export function OnboardingModal() {
                                 </div>
 
                                 <div className="space-y-1.5">
-                                    <Label className="text-[10px] uppercase tracking-wider font-bold text-muted-foreground">
+                                    <Label className="text-xs uppercase tracking-wider font-bold text-muted-foreground">
                                         Teléfono / WhatsApp <span className="text-destructive">*</span>
                                     </Label>
                                     <PhoneInput
@@ -403,7 +403,7 @@ export function OnboardingModal() {
                                 </div>
                             )}
 
-                            <p className="text-[11px] text-muted-foreground text-center">
+                            <p className="text-xs text-muted-foreground text-center">
                                 Puedes cambiar esto en cualquier momento desde la app.
                             </p>
                         </div>
@@ -456,7 +456,7 @@ export function OnboardingModal() {
                                                 <div className="flex-1 min-w-0">
                                                     <p className="font-bold text-sm text-foreground truncate">{inst.name}</p>
                                                     {inst.rules && (
-                                                        <p className="text-[11px] text-muted-foreground line-clamp-1 mt-0.5">{inst.rules}</p>
+                                                        <p className="text-xs text-muted-foreground line-clamp-1 mt-0.5">{inst.rules}</p>
                                                     )}
                                                 </div>
                                                 <div className={cn(
@@ -472,7 +472,7 @@ export function OnboardingModal() {
                             )}
 
                             {selectedIds.size > 0 && (
-                                <p className="text-center text-[11px] font-bold text-primary">
+                                <p className="text-center text-xs font-bold text-primary">
                                     {selectedIds.size} institución{selectedIds.size !== 1 ? "es" : ""} seleccionada{selectedIds.size !== 1 ? "s" : ""}
                                 </p>
                             )}

@@ -288,7 +288,7 @@ export default function CartPage() {
                 </Button>
                 <div className="space-y-0.5">
                     <h1 className="text-2xl font-black tracking-tight text-foreground">Tu Pedido</h1>
-                    <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider">{itemCount} Items seleccionados</p>
+                    <p className="text-xs text-muted-foreground font-bold uppercase tracking-wider">{itemCount} Items seleccionados</p>
                 </div>
             </header>
 
@@ -335,7 +335,7 @@ export default function CartPage() {
                                     {item.options && item.options.length > 0 && (
                                         <p className="text-xs text-muted-foreground leading-snug break-words">{optionsSummary(item.options)}</p>
                                     )}
-                                    <p className="text-[10px] text-muted-foreground font-bold uppercase">{item.restaurantName}</p>
+                                    <p className="text-xs text-muted-foreground font-bold uppercase">{item.restaurantName}</p>
                                     <div className="flex justify-between items-center pt-2">
                                         <span className="font-extrabold text-primary text-base">
                                             {formatCurrency(item.price * item.quantity)}
@@ -371,7 +371,7 @@ export default function CartPage() {
                         <div className="pt-4 border-t border-primary/10 flex justify-between items-center">
                             <div className="space-y-1">
                                 <span className="text-lg font-black text-foreground block">Total a pagar</span>
-                                <span className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest leading-none block">
+                                <span className="text-xs uppercase font-bold text-muted-foreground tracking-widest leading-none block">
                                     Pago y retiro presencial
                                 </span>
                             </div>
@@ -434,7 +434,7 @@ export default function CartPage() {
                                 rows={3}
                                 className="w-full bg-card border border-border rounded-[1.25rem] px-5 py-4 font-medium text-sm text-foreground resize-none shadow-sm focus:outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring placeholder:text-muted-foreground/50"
                             />
-                            <span className="absolute bottom-3 right-4 text-[10px] font-bold text-muted-foreground/50">
+                            <span className="absolute bottom-3 right-4 text-xs font-bold text-muted-foreground/50">
                                 {specialRequests.length}/300
                             </span>
                         </div>

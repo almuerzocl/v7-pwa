@@ -25,7 +25,7 @@ export default function MiCuentaPage() {
         { label: "Mis Reservas",                  icon: CalendarRange, desc: "Historial y gestión de reservas",        href: "/reservations" },
         { label: "Mis Pedidos",                   icon: ShoppingBag,   desc: "Historial y seguimiento de pedidos",     href: "/orders" },
         { label: "Mis Favoritos y Suscripciones", icon: Heart,         desc: favDesc,                                  href: "/favorites" },
-        { label: "Agenda de Contactos",           icon: UserCircle,    desc: "Mis invitados y ley de contactos",       href: "/profile/contacts" },
+        { label: "Agenda de Contactos",           icon: UserCircle,    desc: "Mis invitados y lista de contactos",       href: "/profile/contacts" },
         { label: "Mis Datos y Seguridad",         icon: UserCircle,    desc: "Nombre, teléfono, dirección, clubes y contraseña", href: "/profile/info" },
     ];
 
@@ -95,8 +95,8 @@ export default function MiCuentaPage() {
                 </form>
             </div>
 
-            <p className="text-center text-[10px] text-muted-foreground font-bold uppercase tracking-[0.2em] opacity-40">
-                Almuerzo Cloud Core V5.0.1
+            <p className="text-center text-xs text-muted-foreground font-bold uppercase tracking-[0.2em]">
+                Almuerzo.cl · versión 7
             </p>
         </div>
     );
