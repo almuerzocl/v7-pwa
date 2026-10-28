@@ -1,0 +1,35 @@
+{
+  "extends": [
+    "next/core-web-vitals",
+    "next/typescript"
+  ],
+  "rules": {
+    "@typescript-eslint/no-unused-vars": "warn",
+    "@typescript-eslint/no-explicit-any": "off",
+    "@next/next/no-img-element": "warn"
+  },
+  "overrides": [
+    {
+      "files": [
+        "src/**/*.ts",
+        "src/**/*.tsx"
+      ],
+      "excludedFiles": [
+        "src/lib/inventory.ts"
+      ],
+      "rules": {
+        "no-restricted-syntax": [
+          "error",
+          {
+            "selector": "Literal[value=/^(menu_items|current_stock|stock_managed|daily_initial_stock|stock_reset_date|disabled_by_stock|daily_stock)$/]",
+            "message": "Acceso a menu/stock fuera de src/lib/inventory.ts. Usa el helper de inventario."
+          },
+          {
+            "selector": "Identifier[name=/^(current_stock|stock_managed|daily_initial_stock|stock_reset_date|disabled_by_stock|daily_stock)$/]",
+            "message": "Campo de stock fuera de src/lib/inventory.ts. Usa el helper de inventario."
+          }
+        ]
+      }
+    }
+  ]
+}

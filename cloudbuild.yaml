@@ -1,0 +1,66 @@
+# Cloud Build pipeline for almuerzo-pwa (Cloud Run).
+# Secrets are injected at runtime via Secret Manager (--set-secrets).
+# NEXT_PUBLIC_* vars are baked in at build time via --build-arg substitutions.
+substitutions:
+  _REGION: us-central1
+  _REPO: almuerzo
+  _SERVICE: almuerzo-pwa
+  _NEXT_PUBLIC_SUPABASE_URL: ""
+  _NEXT_PUBLIC_SUPABASE_ANON_KEY: ""
+  _NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: ""
+  _NEXT_PUBLIC_TICKET_URL: ""
+  _NEXT_PUBLIC_PWA_URL: ""
+  # Servicio interno de descuentos (no es secreto; invocación autenticada con la identidad de la PWA)
+  _DISCOUNTS_SERVICE_URL: "https://almuerzo-discounts-353205175933.us-central1.run.app"
+  # Encuesta de bienvenida (no son secretos). WELCOME_EMAILS_ENABLED NO se fija aquí: los envíos se encienden aparte, con gcloud run services update.
+  _SURVEY_BASE_URL: "https://tuopinion.almuerzo.cl"
+  _WELCOME_SURVEY_TOKEN_DAYS: "30"
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+
+images:
+  - "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO}/${_SERVICE}:${BUILD_ID}"
+
+steps:
+  - id: build
+    name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - "--build-arg"
+      - "NEXT_PUBLIC_SUPABASE_URL=${_NEXT_PUBLIC_SUPABASE_URL}"
+      - "--build-arg"
+      - "NEXT_PUBLIC_SUPABASE_ANON_KEY=${_NEXT_PUBLIC_SUPABASE_ANON_KEY}"
+      - "--build-arg"
+      - "NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=${_NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}"
+      - "--build-arg"
+      - "NEXT_PUBLIC_TICKET_URL=${_NEXT_PUBLIC_TICKET_URL}"
+      - "--build-arg"
+      - "NEXT_PUBLIC_PWA_URL=${_NEXT_PUBLIC_PWA_URL}"
+      - "-t"
+      - "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO}/${_SERVICE}:${BUILD_ID}"
+      - "."
+
+  - id: push
+    name: gcr.io/cloud-builders/docker
+    args:
+      - push
+      - "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO}/${_SERVICE}:${BUILD_ID}"
+
+  - id: deploy
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    entrypoint: gcloud
+    args:
+      - run
+      - deploy
+      - "${_SERVICE}"
+      - "--image=${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO}/${_SERVICE}:${BUILD_ID}"
+      - "--region=${_REGION}"
+      - "--platform=managed"
+      - "--memory=512Mi"
+      - "--min-instances=1"
+      - "--max-instances=10"
+      - "--port=8080"
+      - "--allow-unauthenticated"
+      - "--update-env-vars=DISCOUNTS_SERVICE_URL=${_DISCOUNTS_SERVICE_URL},SURVEY_BASE_URL=${_SURVEY_BASE_URL},WELCOME_SURVEY_TOKEN_DAYS=${_WELCOME_SURVEY_TOKEN_DAYS}"
+      - "--set-secrets=SUPABASE_SERVICE_ROLE_KEY=supabase-service-role-key:latest,RESEND_API_KEY=resend-api-key:latest,CRON_SECRET=cron-secret:latest,TICKET_VIEWER_SECRET=ticket-viewer-signing-secret:latest,IDENTITY_SECRET=survey-identity-secret:latest,ANTHROPIC_API_KEY=anthropic-api-key:latest"

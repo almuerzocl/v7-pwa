@@ -1,0 +1,147 @@
+"use client";
+
+import { Home, ShoppingBag, UserCircle, Bell, Calendar, Utensils } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useCart } from "@/context/CartContext";
+import { useNotifications } from "@/context/NotificationContext";
+import { useState } from "react";
+import { format } from "date-fns";
+import { es } from "date-fns/locale";
+
+export function MobileNav() {
+    const pathname  = usePathname();
+    const { itemCount } = useCart();
+    const { notifications, unreadCount, markAsRead, markAllAsRead } = useNotifications();
+    const [showNotifications, setShowNotifications] = useState(false);
+
+    const navItems = [
+        { name: "Home",      href: "/",        icon: Home },
+        { name: "Mi cuenta", href: "/profile", icon: UserCircle },
+        { name: "Carrito",   href: "/cart",    icon: ShoppingBag, badge: itemCount },
+    ];
+
+    return (
+        <>
+            {/* Notification panel */}
+            {showNotifications && (
+                <>
+                    <div className="fixed inset-0 z-[19999]" onClick={() => setShowNotifications(false)} />
+                    <div className="fixed bottom-[68px] sm:bottom-16 left-0 right-0 z-[20000] mx-auto w-full max-w-lg px-3 pb-2 animate-in slide-in-from-bottom-2">
+                        <div className="bg-white rounded-2xl shadow-xl border border-border/50 max-h-[60vh] overflow-y-auto p-2">
+                            <div className="flex items-center justify-between p-2 mb-1">
+                                <h3 className="font-bold text-sm">Notificaciones</h3>
+                                {unreadCount > 0 && (
+                                    <button
+                                        onClick={() => markAllAsRead()}
+                                        className="text-[10px] text-primary font-bold uppercase hover:text-primary/70 transition-colors"
+                                    >
+                                        Marcar leídas
+                                    </button>
+                                )}
+                            </div>
+                            <div className="space-y-1">
+                                {notifications.length === 0 ? (
+                                    <div className="text-center py-6 text-muted-foreground">
+                                        <Bell className="w-8 h-8 mx-auto mb-2 opacity-20" />
+                                        <p className="text-xs font-medium">No tienes notificaciones</p>
+                                    </div>
+                                ) : (
+                                    notifications.map(notification => (
+                                        <div
+                                            key={notification.id}
+                                            onClick={() => !notification.is_read && markAsRead(notification.id)}
+                                            className={`p-3 rounded-xl transition-colors cursor-pointer ${
+                                                !notification.is_read ? "bg-primary/5" : "hover:bg-muted/50"
+                                            }`}
+                                        >
+                                            <div className="flex gap-3">
+                                                <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${
+                                                    !notification.is_read ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"
+                                                }`}>
+                                                    {notification.type === "reservation"
+                                                        ? <Calendar className="w-4 h-4" />
+                                                        : <Utensils className="w-4 h-4" />}
+                                                </div>
+                                                <div className="space-y-0.5">
+                                                    <p className={`text-xs font-bold ${!notification.is_read ? "text-foreground" : "text-muted-foreground"}`}>
+                                                        {notification.title}
+                                                    </p>
+                                                    <p className="text-[11px] text-muted-foreground leading-snug">{notification.message}</p>
+                                                    <p className="text-[9px] text-muted-foreground/70 uppercase font-bold tracking-wider pt-0.5">
+                                                        {notification.created_at
+                                                            ? format(new Date(notification.created_at), "dd MMM HH:mm", { locale: es })
+                                                            : "Ahora"}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </>
+            )}
+
+            {/* Bottom nav */}
+            <div className="fixed bottom-0 left-0 z-[20000] w-full h-[68px] sm:h-16 bg-background/95 backdrop-blur border-t border-border pb-safe">
+                <div className="grid h-full max-w-lg grid-cols-4 mx-auto font-medium">
+                    {navItems.map((item) => {
+                        const isActive = pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href));
+                        const Icon = item.icon;
+                        return (
+                            <Link
+                                key={item.href}
+                                href={item.href}
+                                className={`inline-flex flex-col items-center justify-center hover:bg-muted group ${
+                                    isActive ? "text-primary" : "text-muted-foreground"
+                                }`}
+                            >
+                                <div className="relative">
+                                    <Icon className={`w-[22px] h-[22px] mb-1 ${
+                                        isActive ? "text-primary fill-primary/10" : "text-muted-foreground group-hover:text-primary/80"
+                                    }`} />
+                                    {!!item.badge && item.badge > 0 && (
+                                        <span className="absolute -top-1 -right-2 bg-primary text-white text-[9px] font-bold min-w-[14px] h-[14px] rounded-full flex items-center justify-center border border-background px-0.5">
+                                            {item.badge}
+                                        </span>
+                                    )}
+                                </div>
+                                <span className={`text-[9.5px] tracking-tight ${
+                                    isActive ? "text-primary font-bold" : "text-muted-foreground font-medium group-hover:text-primary/80"
+                                }`}>
+                                    {item.name}
+                                </span>
+                            </Link>
+                        );
+                    })}
+
+                    {/* Notifications button */}
+                    <button
+                        onClick={() => setShowNotifications(!showNotifications)}
+                        className={`inline-flex flex-col items-center justify-center hover:bg-muted group ${
+                            showNotifications ? "text-primary" : "text-muted-foreground"
+                        }`}
+                    >
+                        <div className="relative">
+                            <Bell className={`w-[22px] h-[22px] mb-1 ${
+                                showNotifications ? "text-primary fill-primary/10" : "text-muted-foreground group-hover:text-primary/80"
+                            }`} />
+                            {unreadCount > 0 && (
+                                <span className="absolute -top-1 -right-2 bg-red-500 text-white text-[9px] font-bold min-w-[14px] h-[14px] rounded-full flex items-center justify-center border border-background px-0.5">
+                                    {unreadCount}
+                                </span>
+                            )}
+                        </div>
+                        <span className={`text-[9.5px] tracking-tight ${
+                            showNotifications ? "text-primary font-bold" : "text-muted-foreground font-medium group-hover:text-primary/80"
+                        }`}>
+                            Alertas
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </>
+    );
+}
