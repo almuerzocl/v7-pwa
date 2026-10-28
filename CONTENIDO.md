@@ -1,3 +1,12 @@
+# PWA v7 (pruebas de UX y accesibilidad)
+
+Copia de `almuerzocl/v5-pwa` (`origin/main` 0217bde, 2026-10-28) con historia nueva. Se despliega como servicio
+`almuerzo-pwa-v7` en `app10.almuerzo.cl`, contra el MISMO Supabase de producción que `app2`. No tiene jobs de
+Cloud Scheduler propios (los de `app2` siguen siendo los únicos). Origen de las mejoras: informe de evaluación UX
+del 2026-10-28. Solo capa visual y de textos; ninguna regla de negocio cambia.
+
+---
+
 # pwa/ — Contenido de este directorio
 
 Ver primero: [../../../CLAUDE.md](../../../CLAUDE.md) (reglas generales del entorno).
