@@ -27,7 +27,7 @@ export default function NotificationsPage() {
                 </Button>
                 <div>
                     <h1 className="text-lg font-black tracking-tight text-slate-900 leading-none">Notificaciones</h1>
-                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Canales y Alertas</p>
+                    <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Canales y Alertas</p>
                 </div>
             </header>
 
@@ -45,21 +45,21 @@ export default function NotificationsPage() {
                                     <Smartphone className="w-5 h-5 text-slate-400" />
                                     <span className="text-sm font-bold text-slate-600">App</span>
                                 </div>
-                                <span className="text-[8px] font-black bg-slate-200 px-2 py-1 rounded text-slate-500 uppercase">Configurado</span>
+                                <span className="text-xs font-black bg-slate-200 px-2 py-1 rounded text-slate-500 uppercase">Configurado</span>
                             </div>
                             <div className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl">
                                 <div className="flex items-center gap-3">
                                     <Mail className="w-5 h-5 text-slate-400" />
                                     <span className="text-sm font-bold text-slate-600">Email</span>
                                 </div>
-                                <span className="text-[8px] font-black bg-emerald-100 px-2 py-1 rounded text-emerald-600 uppercase">Activo</span>
+                                <span className="text-xs font-black bg-emerald-100 px-2 py-1 rounded text-emerald-600 uppercase">Activo</span>
                             </div>
                             <div className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl">
                                 <div className="flex items-center gap-3">
                                     <MessageCircle className="w-5 h-5 text-slate-400" />
                                     <span className="text-sm font-bold text-slate-600">WhatsApp</span>
                                 </div>
-                                <span className="text-[8px] font-black bg-amber-100 px-2 py-1 rounded text-amber-600 uppercase">Próximamente</span>
+                                <span className="text-xs font-black bg-amber-100 px-2 py-1 rounded text-amber-600 uppercase">Próximamente</span>
                             </div>
                         </div>
                     </div>

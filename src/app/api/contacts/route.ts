@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
+import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import { createServerClient } from '@supabase/ssr';
 import { z } from 'zod';
 import { logError } from '@/lib/error-logger';
@@ -7,7 +7,7 @@ import { rateLimit, getClientIp } from '@/lib/rate-limit';
 
 export const dynamic = 'force-dynamic';
 
-let _supabaseAdmin: ReturnType<typeof createClient> | null = null;
+let _supabaseAdmin: SupabaseClient<any> | null = null;
 function supabaseAdmin() {
     if (!_supabaseAdmin) {
         _supabaseAdmin = createClient(

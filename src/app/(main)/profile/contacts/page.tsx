@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/lib/supabase";
@@ -11,6 +11,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import PhoneInput, { formatChileanPhone } from "@/components/ui/PhoneInput";
 import { findInterconnectedNumbersAction } from "@/app/actions/guests-actions";
+import { saveContactAction } from "@/app/actions/contacts-actions";
+import { parseVCards, normalizePhone, VCARD_MAX_BYTES } from "@/lib/vcard";
 import {
     UserPlus,
     Search,
@@ -24,6 +26,7 @@ import {
     X,
     Check,
     Smartphone,
+    FileUp,
     Shield,
     Monitor
 } from "lucide-react";
@@ -120,6 +123,39 @@ export default function ContactsPage() {
             checkInterconnectivity(contacts);
         }
     }, [contacts, checkInterconnectivity]);
+
+    const vcfInputRef = useRef<HTMLInputElement>(null);
+
+    // Sin selector nativo (iPhone, escritorio): importa tarjetas de contacto .vcf. Se leen en el dispositivo, no se suben.
+    const handleVCardFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const files = Array.from(e.target.files || []);
+        e.target.value = "";
+        if (!user || files.length === 0) return;
+        if (files.some(f => f.size > VCARD_MAX_BYTES)) { toast.error("El archivo es demasiado grande"); return; }
+        setLoading(true);
+        try {
+            const parsed = (await Promise.all(files.map(f => f.text()))).flatMap(parseVCards);
+            if (parsed.length === 0) { toast.error("No encontramos contactos con nombre y teléfono o correo en el archivo"); return; }
+            let imported = 0, skipped = 0;
+            for (const c of parsed) {
+                const phone = c.phone ? normalizePhone(c.phone) : null;
+                const exists = contacts.some(x =>
+                    (phone && x.whatsapp_phone && normalizePhone(x.whatsapp_phone) === phone) ||
+                    (c.email && x.email && x.email.toLowerCase() === c.email.toLowerCase()));
+                if (exists) { skipped++; continue; }
+                const r = await saveContactAction(user.id, { first_name: c.first_name || "Contacto", last_name: c.last_name, email: c.email, whatsapp_phone: phone });
+                if (r.success) imported++;
+            }
+            if (imported > 0) { toast.success(`${imported} contacto${imported > 1 ? "s" : ""} importado${imported > 1 ? "s" : ""}.`); fetchContacts(); }
+            else if (skipped > 0) toast.success("Esos contactos ya estaban en tu agenda.");
+            else toast.error("No se pudo importar el contacto.");
+        } catch (err) {
+            console.error("Error importing vCard:", err);
+            toast.error("No pudimos leer el archivo.");
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const handleImportFromPhone = async () => {
         if (!user) return;
@@ -304,10 +340,25 @@ export default function ContactsPage() {
                         </Link>
                         <div>
                             <h1 className="text-xl font-black tracking-tight">Agenda de Contactos</h1>
-                            <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider">Gestión de Invitados</p>
+                            <p className="text-xs text-muted-foreground font-bold uppercase tracking-wider">Gestión de Invitados</p>
                         </div>
                     </div>
                     <div className="flex gap-2">
+                        {!isAdding && !canImportNatively && (
+                            <>
+                                <input ref={vcfInputRef} type="file" multiple accept=".vcf,.vcard,text/vcard,text/x-vcard,text/directory" className="hidden" onChange={handleVCardFile} />
+                                <Button
+                                    onClick={() => vcfInputRef.current?.click()}
+                                    variant="outline"
+                                    size="icon"
+                                    className="rounded-full shadow-sm border-primary/20 text-primary"
+                                    title="Importar tarjeta de contacto (.vcf)"
+                                    aria-label="Importar tarjeta de contacto (.vcf)"
+                                >
+                                    <FileUp className="w-5 h-5" />
+                                </Button>
+                            </>
+                        )}
                         {!isAdding && addressBookConsent && canImportNatively && (
                             <Button
                                 onClick={handleImportFromPhone}
@@ -353,11 +404,11 @@ export default function ContactsPage() {
                             <p className="text-sm font-bold text-foreground leading-tight">
                                 Autorizo el acceso a mi libreta de direcciones
                             </p>
-                            <p className="text-[11px] text-muted-foreground leading-snug">
+                            <p className="text-xs text-muted-foreground leading-snug">
                                 {platform === "ios" && (
                                     <>
                                         <span className="font-bold text-foreground/70">iPhone / iPad: </span>
-                                        Permite importar contactos desde tu dispositivo Apple usando el selector nativo de iOS.
+                                        Safari no deja que una web lea tu agenda. Importa tarjetas de contacto: en Contactos elige a la persona, toca Compartir contacto, luego Guardar en Archivos, y selecciónala con el botón de archivo de arriba.
                                     </>
                                 )}
                                 {platform === "android" && (
@@ -369,7 +420,7 @@ export default function ContactsPage() {
                                 {platform === "web" && (
                                     <>
                                         <span className="font-bold text-foreground/70">Navegador web: </span>
-                                        La importación directa no está disponible en escritorio. Puedes agregar contactos manualmente.
+                                        La importación directa no está disponible en escritorio. Puedes agregar contactos manualmente o importar un archivo de tarjetas de contacto (.vcf).
                                     </>
                                 )}
                             </p>
@@ -488,12 +539,12 @@ export default function ContactsPage() {
                                                     {contact.first_name} {contact.last_name}
                                                 </p>
                                                 {interconnectedNumbers.has(contact.whatsapp_phone || "") && (
-                                                    <span className="flex items-center gap-1 bg-emerald-100 text-emerald-700 text-[8px] font-black uppercase px-2 py-0.5 rounded-full border border-emerald-200">
+                                                    <span className="flex items-center gap-1 bg-emerald-100 text-emerald-700 text-xs font-black uppercase px-2 py-0.5 rounded-full border border-emerald-200">
                                                         <Check className="w-2.5 h-2.5" /> Interconectado
                                                     </span>
                                                 )}
                                             </div>
-                                            <p className="text-[11px] text-muted-foreground font-medium">
+                                            <p className="text-xs text-muted-foreground font-medium">
                                                 {contact.whatsapp_phone} {contact.email ? `• ${contact.email}` : ""}
                                             </p>
                                         </div>
@@ -525,7 +576,7 @@ export default function ContactsPage() {
                                 </div>
                                 <div>
                                     <p className="font-bold text-foreground">Aún no tienes contactos</p>
-                                    <p className="text-[11px] text-muted-foreground max-w-[200px] mx-auto">
+                                    <p className="text-xs text-muted-foreground max-w-[200px] mx-auto">
                                         Agrega a tus amigos y colegas para invitarlos rápidamente a tus reservas.
                                     </p>
                                 </div>
@@ -544,7 +595,7 @@ export default function ContactsPage() {
                             <Shield className="w-5 h-5" />
                             <h3 className="font-black text-sm uppercase tracking-tight">Privacidad y Ley de Contactos</h3>
                         </div>
-                        <p className="text-[11px] leading-relaxed text-muted-foreground font-medium">
+                        <p className="text-xs leading-relaxed text-muted-foreground font-medium">
                             En cumplimiento con la normativa de protección de datos, tus contactos solo se utilizan para facilitar el proceso de invitación a mesas reservadas.
                             <strong> Almuerzo.cl no utiliza estos datos para fines comerciales.</strong>
                         </p>

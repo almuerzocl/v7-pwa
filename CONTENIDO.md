@@ -1,3 +1,17 @@
+# PWA v7 (pruebas de implementaciones antes de producción)
+
+Copia de `almuerzocl/v5-pwa` sincronizada con `origin/main` 145f5e3 (2026-10-30), con historia propia (el historial
+original tiene claves expuestas y este repo es público: nunca se sube nada con secretos). Se despliega como servicio
+`almuerzo-pwa-v7` en `app10.almuerzo.cl`, contra el MISMO Supabase de producción que `app2`. No tiene jobs de
+Cloud Scheduler propios (los de `app2` siguen siendo los únicos).
+
+Regla de esta copia: aquí se prueban los cambios antes de llevarlos a `v5-pwa`. Una migración aplicada desde aquí afecta
+a producción (base única): solo con aprobación y solo aditivas. Las mejoras de UX de la rama
+`feature/ux-accesibilidad-quick-wins` (2026-10-28) ya están en producción con otra forma (#178, #180, #185), por eso
+esta sincronización parte de producción y no las reaplica.
+
+---
+
 # pwa/ — Contenido de este directorio
 
 Ver primero: [../../../CLAUDE.md](../../../CLAUDE.md) (reglas generales del entorno).

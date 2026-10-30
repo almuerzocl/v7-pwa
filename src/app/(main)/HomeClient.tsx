@@ -12,6 +12,7 @@ import dynamic from 'next/dynamic';
 import { supabase } from '@/lib/supabase';
 import { useUserLocation, haversineMeters } from '@/hooks/useUserLocation';
 import { DAILY_MENU_EMBED, extractDailyMenus } from '@/lib/inventory';
+import { ActiveTicketCard } from '@/components/blocks/ActiveTicketCard';
 import { ImpressionSentinel } from '@/components/blocks/ImpressionSentinel';
 
 // Lazy load heavy components
@@ -217,6 +218,8 @@ export default function HomeClient({ initialRestaurants, assistant }: HomeClient
                 </div>
 
 
+                <ActiveTicketCard />
+
                 {/* 3. Título de Sección dinámico */}
                 <section className="space-y-4">
                     <div className={cn("flex flex-col gap-1", assistant && "relative pr-24")}>
@@ -224,7 +227,7 @@ export default function HomeClient({ initialRestaurants, assistant }: HomeClient
                         <h2 className="text-2xl font-black tracking-tighter text-foreground">
                             {activeView === 'restaurants' ? "Restaurantes Cerca de Ti" : "Menús de Hoy"}
                         </h2>
-                        <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">
+                        <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
                             {loading
                                 ? "Cargando locales..."
                                 : activeView === 'menus'
@@ -273,12 +276,12 @@ export default function HomeClient({ initialRestaurants, assistant }: HomeClient
 
                                         <div className="absolute top-4 left-4 bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10 flex items-center gap-1.5 shadow-xl">
                                             <Utensils className="w-3 h-3 text-white/90" />
-                                            <span className="text-white text-[10px] font-black tracking-widest uppercase truncate max-w-[180px]">{restaurant.name}</span>
+                                            <span className="text-white text-xs font-black tracking-widest uppercase truncate max-w-[180px]">{restaurant.name}</span>
                                         </div>
 
                                         <div className="absolute bottom-4 left-4 right-4 flex justify-between items-end gap-4">
                                             <div className="space-y-1">
-                                                <span className="text-primary-foreground/80 text-[10px] font-black uppercase tracking-widest bg-primary/90 px-2 py-0.5 rounded-md inline-block mb-1">Menú del Día</span>
+                                                <span className="text-primary-foreground/80 text-xs font-black uppercase tracking-widest bg-primary/90 px-2 py-0.5 rounded-md inline-block mb-1">Menú del Día</span>
                                                 <h3 className="text-white font-black text-lg sm:text-2xl leading-tight line-clamp-2">{menu.name}</h3>
                                             </div>
                                             <div className="bg-white px-3 py-2 rounded-xl shadow-xl shrink-0 border border-white/20">
@@ -301,7 +304,8 @@ export default function HomeClient({ initialRestaurants, assistant }: HomeClient
                                 <p className="text-muted-foreground font-medium">
                                     {activeView === 'menus' ? "No hay menús disponibles con esos filtros." : "No encontramos locales con esos filtros."}
                                 </p>
-                                <button onClick={() => { setSortBy('all'); setSearchQuery(""); setDistanceLevel(2); }} className="text-primary font-bold text-sm underline underline-offset-4">Ver todos</button>
+                                <p className="text-xs text-muted-foreground px-6">Prueba ampliando la distancia, quitando la búsqueda o cambiando el orden.</p>
+                                <button onClick={() => { setSortBy('all'); setSearchQuery(""); setDistanceLevel(2); }} className="inline-flex items-center justify-center min-h-11 px-6 rounded-2xl bg-primary text-white font-bold text-sm">Quitar filtros</button>
                             </div>
                         )}
                     </div>
@@ -337,7 +341,7 @@ export default function HomeClient({ initialRestaurants, assistant }: HomeClient
                                     key={key}
                                     onClick={() => setSortBy(key)}
                                     className={cn(
-                                        "whitespace-nowrap flex items-center gap-1 px-3 py-1.5 rounded-xl text-[10px] font-extrabold transition-all border shrink-0",
+                                        "whitespace-nowrap flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-extrabold transition-all border shrink-0",
                                         sortBy === key
                                             ? "bg-primary text-white border-primary shadow-md shadow-primary/20"
                                             : "bg-muted/50 text-muted-foreground border-border/60 hover:border-primary/30"
@@ -376,10 +380,10 @@ export default function HomeClient({ initialRestaurants, assistant }: HomeClient
                                             <Icon className="w-3.5 h-3.5" />
                                         </div>
                                         <span className={cn(
-                                            "text-[9px] font-extrabold leading-none",
+                                            "text-xs font-extrabold leading-none",
                                             distanceLevel === level ? "text-primary" : "text-muted-foreground"
                                         )}>{label}</span>
-                                        <span className="text-[8px] text-muted-foreground/50 font-medium leading-none">{sub}</span>
+                                        <span className="text-xs text-muted-foreground/50 font-medium leading-none">{sub}</span>
                                     </button>
                                 ))}
                             </div>
@@ -391,8 +395,8 @@ export default function HomeClient({ initialRestaurants, assistant }: HomeClient
 
             {/* Footer with privacy link */}
             <footer className="py-8 text-center space-y-2">
-                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/40">Almuerzo.cl</p>
-                <a href="/privacidad" className="text-[10px] font-bold text-muted-foreground/50 hover:text-orange-500 transition-colors underline underline-offset-2">
+                <p className="text-xs font-black uppercase tracking-[0.3em] text-muted-foreground/40">Almuerzo.cl</p>
+                <a href="/privacidad" className="text-xs font-bold text-muted-foreground/50 hover:text-orange-500 transition-colors underline underline-offset-2">
                     Política de Privacidad
                 </a>
             </footer>

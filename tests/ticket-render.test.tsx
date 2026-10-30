@@ -85,3 +85,34 @@ describe('TicketDigitalView: contenido', () => {
         expect(html({ res: reservation(), showActions: false })).not.toContain('<button');
     });
 });
+
+describe('TicketDigitalView: enviar invitación a un invitado', () => {
+    const withIds = (over: any = {}) => reservation({
+        guest_data: [
+            { id: 'g-org', name: 'Esteban Zarate', is_organizer: true, status: 'CONFIRMADA' },
+            { id: 'g-ana', name: 'Ana Pérez', status: 'PENDIENTE' },
+            { id: 'g-luis', name: 'Luis Soto', status: 'CONFIRMADA' },
+            { id: 'g-eva', name: 'Eva Rojas', status: 'RECHAZADA' },
+        ],
+        ...over,
+    });
+    const onInviteGuest = () => {};
+
+    it('muestra el botón solo al invitado pendiente de una reserva confirmada', () => {
+        const h = html({ res: withIds(), restaurant, onInviteGuest });
+        expect(h).toContain('Enviar invitación a Ana Pérez');
+        expect(h).not.toContain('Enviar invitación a Esteban');
+        expect(h).not.toContain('Enviar invitación a Luis');
+        expect(h).not.toContain('Enviar invitación a Eva');
+    });
+    it('sin la función (public-tickets, dashboard) no hay botón', () => {
+        expect(html({ res: withIds(), restaurant })).not.toContain('Enviar invitación');
+    });
+    it('con la reserva pendiente no se invita a nadie', () => {
+        expect(html({ res: withIds({ status: 'PENDIENTE' }), restaurant, onInviteGuest })).not.toContain('Enviar invitación');
+    });
+    it('un invitado sin id no se puede invitar', () => {
+        const res = withIds({ guest_data: [{ name: 'Ana Pérez', status: 'PENDIENTE' }] });
+        expect(html({ res, restaurant, onInviteGuest })).not.toContain('Enviar invitación');
+    });
+});

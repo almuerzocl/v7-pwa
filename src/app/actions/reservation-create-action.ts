@@ -1,6 +1,6 @@
 "use server";
 
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { verifyUser } from "@/utils/supabase/auth-check";
 import { validateReservationSlot, MESSAGES as SLOT_MESSAGES } from "@/lib/core-business/reservation-slots";
 import { formatInTimeZone } from "date-fns-tz";
@@ -9,7 +9,7 @@ import type { InstitutionDiscount } from "@/lib/core-business/discounts";
 import { limitInfoFromDbError, limitReachedMessage, LIMIT_REACHED, parseLimitInfo } from "@/lib/operation-limits";
 import { processReservationConfirmations } from "@/lib/server/reservation-confirmation";
 
-let _supabaseAdmin: ReturnType<typeof createClient> | null = null;
+let _supabaseAdmin: SupabaseClient<any> | null = null;
 function supabaseAdmin() {
     if (!_supabaseAdmin) {
         _supabaseAdmin = createClient(

@@ -8,7 +8,7 @@
  * props desde `TicketDigital.tsx`, que sí es propio de cada repo.
  */
 import React from 'react';
-import { MapPin, Calendar, Clock, Users, Tag, Phone, Mail, CreditCard, StickyNote, Percent, Ticket } from 'lucide-react';
+import { MapPin, Calendar, Clock, Users, Tag, Phone, Mail, CreditCard, StickyNote, Percent, Ticket, Send } from 'lucide-react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { getBusinessStatusStyles, getBusinessStatusLabel, getInitials, formatCurrency } from '@/lib/core-business/ui-helpers';
@@ -35,6 +35,12 @@ export interface TicketDigitalViewProps {
     extra?: React.ReactNode;
     /** Deja libre la esquina superior derecha cuando el ticket va en un modal con botón de cerrar. */
     reserveCloseButton?: boolean;
+    /**
+     * Si el repo lo entrega, cada invitado pendiente de una reserva CONFIRMADA muestra un botón para
+     * enviarle su enlace personal de invitación (WhatsApp / hoja de compartir). Solo lo usa la PWA:
+     * en los otros repos los ids de invitados no viajan al navegador.
+     */
+    onInviteGuest?: (guest: any) => void;
 }
 
 const LBL = 'text-[9px] uppercase font-extrabold tracking-wider text-muted-foreground leading-none';
@@ -54,7 +60,7 @@ function safeTime(iso: string) {
 }
 
 export function TicketDigitalView({
-    res, showActions = true, calendarLinks = null, ticketUrl = '', contact = null, restaurant = null, extra = null, reserveCloseButton = false,
+    res, showActions = true, calendarLinks = null, ticketUrl = '', contact = null, restaurant = null, extra = null, reserveCloseButton = false, onInviteGuest,
 }: TicketDigitalViewProps) {
     const isOrder = !!res?.items && Array.isArray(res.items) && res.items.length > 0 && !res.party_size && !res.guest_data;
     const kind = isOrder ? 'TAKEAWAY' : 'RESERVATION';
@@ -334,6 +340,14 @@ export function TicketDigitalView({
                                             <span className={cn('shrink-0 px-2 py-0.5 rounded-full border text-[9px] font-black uppercase tracking-tight', whiteStatusClasses(status))}>
                                                 {getBusinessStatusLabel(status)}
                                             </span>
+                                            {onInviteGuest && res.status === 'CONFIRMADA' && !guest.is_organizer && !guest.is_you && guest.id
+                                                && status !== 'CONFIRMADA' && status !== 'RECHAZADA' && (
+                                                <button type="button" onClick={() => onInviteGuest(guest)}
+                                                    aria-label={`Enviar invitación a ${name}`}
+                                                    className="shrink-0 w-7 h-7 rounded-md border border-border flex items-center justify-center text-muted-foreground hover:text-orange-500 active:scale-90 transition-all">
+                                                    <Send className="w-3.5 h-3.5" />
+                                                </button>
+                                            )}
                                         </li>
                                     );
                                 })}

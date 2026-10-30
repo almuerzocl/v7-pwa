@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 import { createClient } from '@/utils/supabase/server';
 import { validatePassword } from '@/lib/password-policy';
+import { RECENT_SESSION_MS } from '@/lib/recent-session';
 
 /**
  * POST /api/auth/cambiar-contrasena  { newPassword, currentPassword? }
@@ -16,7 +17,6 @@ import { validatePassword } from '@/lib/password-policy';
 export const dynamic = 'force-dynamic';
 
 const NO_STORE = { 'Cache-Control': 'no-store' };
-export const RECENT_SESSION_MS = 15 * 60 * 1000;
 
 const err = (error: string, status: number) => NextResponse.json({ ok: false, error }, { status, headers: NO_STORE });
 

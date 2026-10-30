@@ -148,19 +148,19 @@ function OrderRow({
                         <h3 className="font-bold text-sm leading-tight">
                             {order.restaurant?.name || "Restaurante"}
                         </h3>
-                        <span className={`shrink-0 text-[9px] font-bold px-2 py-0.5 rounded-full border ${getBusinessStatusStyles(order.status)}`}>
+                        <span className={`shrink-0 text-xs font-bold px-2 py-0.5 rounded-full border ${getBusinessStatusStyles(order.status)}`}>
                             {getBusinessStatusLabel(order.status, "TAKEAWAY")}
                         </span>
                     </div>
 
                     {order.restaurant?.address && (
-                        <p className="flex items-center gap-1 text-[11px] text-muted-foreground mb-2.5 truncate">
+                        <p className="flex items-center gap-1 text-xs text-muted-foreground mb-2.5 truncate">
                             <MapPin className="w-3 h-3 shrink-0" />
                             <span className="truncate">{formatAddress(order.restaurant.address)}</span>
                         </p>
                     )}
 
-                    <div className="flex flex-wrap gap-3 text-[11px] font-medium text-foreground/70">
+                    <div className="flex flex-wrap gap-3 text-xs font-medium text-foreground/70">
                         <span className="flex items-center gap-1">
                             <Clock className="w-3.5 h-3.5 text-primary" />
                             {order.created_at
@@ -179,7 +179,7 @@ function OrderRow({
                         <button
                             onClick={handleConfirmDelivery}
                             disabled={confirming}
-                            className="text-[9px] font-bold px-2 py-2 rounded-xl bg-emerald-100 text-emerald-700 hover:bg-emerald-200 transition-colors flex flex-col items-center gap-0.5 disabled:opacity-50"
+                            className="text-xs font-bold px-2 py-2 rounded-xl bg-emerald-100 text-emerald-700 hover:bg-emerald-200 transition-colors flex flex-col items-center gap-0.5 disabled:opacity-50"
                         >
                             <CheckCircle className="w-4 h-4" />
                             {confirming ? "..." : "Recibido"}
@@ -189,14 +189,14 @@ function OrderRow({
                         <button
                             onClick={handleCancel}
                             disabled={cancelling}
-                            className="text-[9px] font-bold px-2 py-2 rounded-xl bg-rose-50 text-rose-600 hover:bg-rose-100 transition-colors flex flex-col items-center gap-0.5 disabled:opacity-50"
+                            className="text-xs font-bold px-2 py-2 rounded-xl bg-rose-50 text-rose-600 hover:bg-rose-100 transition-colors flex flex-col items-center gap-0.5 disabled:opacity-50"
                         >
                             <XCircle className="w-4 h-4" />
                             {cancelling ? "..." : "Cancelar"}
                         </button>
                     )}
                     {!hasActions && (
-                        <span className="text-[9px] text-muted-foreground text-center">—</span>
+                        <span className="text-xs text-muted-foreground text-center">—</span>
                     )}
                 </div>
             </div>
@@ -299,7 +299,7 @@ export default function OrdersPage() {
                     <h1 className="text-2xl font-black tracking-tight text-foreground">Mis Pedidos</h1>
                 </div>
                 {reputation !== null && (
-                    <span className="bg-green-100 text-green-700 text-[10px] font-bold px-3 py-1.5 rounded-full border border-green-200 flex items-center gap-1.5">
+                    <span className="bg-green-100 text-green-700 text-xs font-bold px-3 py-1.5 rounded-full border border-green-200 flex items-center gap-1.5">
                         <Star className="w-3 h-3 fill-green-500 text-green-500" />
                         {formatReputation(reputation)}
                     </span>
@@ -312,7 +312,7 @@ export default function OrdersPage() {
                     <button
                         key={v}
                         onClick={() => setView(v)}
-                        className={`flex-1 py-2 rounded-xl text-[11px] font-bold transition-all ${
+                        className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all ${
                             view === v
                                 ? "bg-background shadow-sm text-foreground"
                                 : "text-muted-foreground hover:text-foreground/70"

@@ -17,6 +17,19 @@ export type CreateTakeawayOrderResult =
     | { success: true; order: { id: string; [k: string]: unknown }; discountDropped?: { reason: 'NOT_VALID' | 'UNAVAILABLE'; message: string } }
     | { success: false; error: string; unauthorized?: boolean; code?: typeof LIMIT_REACHED | typeof PRICE_ERROR; limitReached?: OperationLimitInfo | null; priceError?: PriceErrorInfo };
 
+// Columnas que solo escribe el sistema (aprobación, avisos de correo, marca de personal, fechas). La fila viene del navegador:
+// aunque la base ya fuerza estado inicial, created_by_staff y created_at, no se deja viajar ninguna de ellas.
+const SERVER_OWNED_COLUMNS = [
+    'id', 'approved_at', 'confirmed_at', 'rejected_at', 'created_at', 'updated_at', 'created_by_staff',
+    'confirmation_notified_at', 'confirmation_notify_attempts', 'confirmation_notify_claimed_at',
+] as const;
+
+function withoutServerOwned<T extends Record<string, unknown>>(row: T): T {
+    const clean: Record<string, unknown> = { ...row };
+    for (const col of SERVER_OWNED_COLUMNS) delete clean[col];
+    return clean as T;
+}
+
 // Única vía para crear un pedido (flujo online y reintento de la cola offline): POST /api/takeaway-orders.
 // El insert usa la sesión del usuario (no service role), así que las políticas RLS y los guards de stock
 // de la base siguen aplicando igual que cuando el navegador insertaba directo.
@@ -37,7 +50,7 @@ export async function createTakeawayOrder(row: TakeawayOrderRow): Promise<Create
     metadata.special_requests = composeNotes(metadata.special_requests, outcome.discount) || null;
 
     const toInsert = {
-        ...row,
+        ...withoutServerOwned(row),
         discount_data_snapshot: outcome.discount ? row.discount_data_snapshot : null,
         metadata,
     };

@@ -266,7 +266,7 @@ function LoginPageContent() {
                     <h1 className="text-4xl font-black tracking-tighter text-zinc-900 mb-2">
                         Almuerzo<span className="text-orange-500">.cl</span>
                     </h1>
-                    <p className="text-zinc-500 font-bold uppercase tracking-[0.2em] text-[10px]">
+                    <p className="text-zinc-600 font-bold uppercase tracking-[0.2em] text-xs">
                         Evolución Gastronómica
                     </p>
                 </motion.div>
@@ -312,7 +312,7 @@ function LoginPageContent() {
                                 </h2>
                                 <p className="text-xs text-zinc-400 font-bold uppercase tracking-wider">
                                     {authMode === "login" && "Bienvenido de vuelta"}
-                                    {authMode === "register" && "Cuenta gratis"}
+                                    {authMode === "register" && "Crear tu cuenta es gratis"}
                                     {authMode === "magic-link" && "Ingresa sin contraseña"}
                                     {authMode === "forgot-password" && "Te enviamos un enlace"}
                                 </p>
@@ -351,13 +351,22 @@ function LoginPageContent() {
                                 {googleButton}
                                 <div className="relative">
                                     <div className="absolute inset-0 flex items-center"><span className="w-full border-t border-zinc-100" /></div>
-                                    <div className="relative flex justify-center text-[10px] uppercase font-black text-zinc-300 tracking-widest">
+                                    <div className="relative flex justify-center text-xs uppercase font-black text-zinc-500 tracking-widest">
                                         <span className="bg-white px-4">{googleSection.dividerLabel}</span>
                                     </div>
                                 </div>
                             </div>
                         )}
 
+                        {authMode === "login" && (
+                            <ul className="mb-8 grid grid-cols-3 gap-2 text-center" aria-label="Qué puedes hacer en Almuerzo.cl">
+                                {["Reserva en segundos", "Descuentos del día", "Pagas en el local"].map((b) => (
+                                    <li key={b} className="flex items-center justify-center rounded-2xl bg-orange-50 border border-orange-100 px-2 py-3 text-xs font-bold leading-tight text-zinc-700">
+                                        {b}
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
                         <form
                             onSubmit={
                                 authMode === "login" ? handleLogin :
@@ -377,10 +386,11 @@ function LoginPageContent() {
                                         className="grid grid-cols-2 gap-4"
                                     >
                                         <div className="space-y-2">
-                                            <Label className="text-[10px] uppercase font-black text-zinc-400 tracking-widest ml-1">Nombre</Label>
+                                            <Label htmlFor="auth-first-name" className="text-xs uppercase font-black text-zinc-600 tracking-widest ml-1">Nombre</Label>
                                             <div className="relative">
                                                 <UserIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-300" />
                                                 <Input
+                                                    id="auth-first-name" name="given-name" autoComplete="given-name"
                                                     value={firstName}
                                                     onChange={(e) => setFirstName(e.target.value)}
                                                     placeholder="Tu nombre"
@@ -389,8 +399,9 @@ function LoginPageContent() {
                                             </div>
                                         </div>
                                         <div className="space-y-2">
-                                            <Label className="text-[10px] uppercase font-black text-zinc-400 tracking-widest ml-1">Apellido</Label>
+                                            <Label htmlFor="auth-last-name" className="text-xs uppercase font-black text-zinc-600 tracking-widest ml-1">Apellido</Label>
                                             <Input
+                                                id="auth-last-name" name="family-name" autoComplete="family-name"
                                                 value={lastName}
                                                 onChange={(e) => setLastName(e.target.value)}
                                                 placeholder="Tu apellido"
@@ -403,11 +414,12 @@ function LoginPageContent() {
 
                             {/* Email */}
                             <div className="space-y-2">
-                                <Label className="text-[10px] uppercase font-black text-zinc-400 tracking-widest ml-1">Email</Label>
+                                <Label htmlFor="auth-email" className="text-xs uppercase font-black text-zinc-600 tracking-widest ml-1">Email</Label>
                                 <div className="relative">
                                     <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-300" />
                                     <Input
                                         type="email"
+                                        id="auth-email" name="email" autoComplete="email" inputMode="email"
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
                                         placeholder="tu@correo.cl"
@@ -426,12 +438,12 @@ function LoginPageContent() {
                                         className="space-y-2"
                                     >
                                         <div className="flex justify-between items-center ml-1">
-                                            <Label className="text-[10px] uppercase font-black text-zinc-400 tracking-widest">Contraseña</Label>
+                                            <Label htmlFor="auth-password" className="text-xs uppercase font-black text-zinc-600 tracking-widest">Contraseña</Label>
                                             {authMode === "login" && (
                                                 <button
                                                     type="button"
                                                     onClick={() => setAuthMode("forgot-password")}
-                                                    className="text-[10px] uppercase font-black text-orange-500 pr-1 hover:underline"
+                                                    className="text-xs uppercase font-black text-orange-700 px-1 py-3 -my-3 hover:underline"
                                                 >
                                                     ¿La olvidaste?
                                                 </button>
@@ -441,15 +453,18 @@ function LoginPageContent() {
                                             <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-300" />
                                             <Input
                                                 type={isPasswordVisible ? "text" : "password"}
+                                                id="auth-password" name="password" autoComplete={authMode === "login" ? "current-password" : "new-password"}
                                                 value={password}
                                                 onChange={(e) => setPassword(e.target.value)}
-                                                placeholder="••••••••"
+                                                placeholder="Tu contraseña"
                                                 className="h-14 pl-11 pr-12 bg-zinc-50 border-transparent focus:bg-white focus:ring-2 focus:ring-orange-500/10 transition-all rounded-2xl font-bold"
                                             />
                                             <button
                                                 type="button"
                                                 onClick={() => setIsPasswordVisible(!isPasswordVisible)}
-                                                className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-300 hover:text-zinc-900"
+                                                aria-label={isPasswordVisible ? "Ocultar contraseña" : "Mostrar contraseña"}
+                                                aria-pressed={isPasswordVisible}
+                                                className="absolute right-1 top-1/2 -translate-y-1/2 h-11 w-11 flex items-center justify-center text-zinc-500 hover:text-zinc-900"
                                             >
                                                 {isPasswordVisible ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                                             </button>
@@ -465,15 +480,16 @@ function LoginPageContent() {
                                     animate={{ opacity: 1 }}
                                     className="space-y-2"
                                 >
-                                    <Label className="text-[10px] uppercase font-black text-zinc-400 tracking-widest ml-1">Confirmar Contraseña</Label>
+                                    <Label htmlFor="auth-confirm-password" className="text-xs uppercase font-black text-zinc-600 tracking-widest ml-1">Confirmar Contraseña</Label>
                                     <Input
                                         type={isPasswordVisible ? "text" : "password"}
+                                        id="auth-confirm-password" name="confirm-password" autoComplete="new-password"
                                         value={confirmPassword}
                                         onChange={(e) => setConfirmPassword(e.target.value)}
-                                        placeholder="••••••••"
+                                        placeholder="Repite tu contraseña"
                                         className="h-14 bg-zinc-50 border-transparent focus:bg-white focus:ring-2 focus:ring-orange-500/10 transition-all rounded-2xl font-bold"
                                     />
-                                    <p className="text-[11px] text-zinc-400 font-medium ml-1">{PASSWORD_RULES_TEXT}</p>
+                                    <p className="text-xs text-zinc-400 font-medium ml-1">{PASSWORD_RULES_TEXT}</p>
                                 </motion.div>
                             )}
 
@@ -506,7 +522,7 @@ function LoginPageContent() {
 
                                 <div className="relative">
                                     <div className="absolute inset-0 flex items-center"><span className="w-full border-t border-zinc-100" /></div>
-                                    <div className="relative flex justify-center text-[10px] uppercase font-black text-zinc-300 tracking-widest">
+                                    <div className="relative flex justify-center text-xs uppercase font-black text-zinc-500 tracking-widest">
                                         <span className="bg-white px-4">{googleSection?.dividerLabel}</span>
                                     </div>
                                 </div>
@@ -536,8 +552,8 @@ function LoginPageContent() {
                             </div>
                         )}
 
-                        <p className="text-center text-[10px] font-bold text-zinc-300 uppercase tracking-wider mt-10 max-w-[200px] mx-auto leading-relaxed">
-                            Al continuar, aceptas la <a href="/privacidad" target="_blank" className="text-zinc-500 underline underline-offset-2 hover:text-orange-500">Política de Privacidad</a> de Almuerzo.cl
+                        <p className="text-center text-xs font-bold text-zinc-600 uppercase tracking-wider mt-10 max-w-[260px] mx-auto leading-relaxed">
+                            Al continuar, aceptas la <a href="/privacidad" target="_blank" className="text-zinc-800 underline underline-offset-2 hover:text-orange-700 inline-block py-2">Política de Privacidad</a> de Almuerzo.cl
                         </p>
                     </>
                 )}

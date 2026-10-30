@@ -41,7 +41,7 @@ export default function Error({
           Ocurri&oacute; un error inesperado. Por favor intenta de nuevo.
         </p>
         {error.digest && (
-          <p className="text-[10px] text-zinc-300 font-mono">Ref: {error.digest}</p>
+          <p className="text-xs text-zinc-300 font-mono">Ref: {error.digest}</p>
         )}
         <button
           onClick={() => reset()}

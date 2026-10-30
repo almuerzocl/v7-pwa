@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useCallback } from "react";
 import { supabase } from "@/lib/supabase";
-import { RestaurantCard, RestaurantData } from "@/components/blocks/RestaurantCard";
+import { RestaurantCard } from "@/components/blocks/RestaurantCard";
+import type { RestaurantData } from "@/types";
 import ReservationWizard from "@/components/blocks/ReservationWizard";
 import { RestaurantActionModal } from "@/components/blocks/RestaurantActionModal";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -93,7 +94,7 @@ export default function FavoritesPage() {
                     </Button>
                     <div>
                         <h1 className="text-lg font-black tracking-tight text-slate-900 leading-none">Mis Guardados</h1>
-                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Favoritos y Alertas</p>
+                        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Favoritos y Alertas</p>
                     </div>
                 </div>
             </header>
@@ -144,7 +145,7 @@ export default function FavoritesPage() {
 
                         <TabsContent value="subscriptions" className="space-y-4 focus-visible:outline-none">
                             <div className="bg-blue-50 border border-blue-100 rounded-2xl p-4 mb-4">
-                                <p className="text-[11px] font-bold text-blue-700 leading-tight">
+                                <p className="text-xs font-bold text-blue-700 leading-tight">
                                     💡 Recibirás notificaciones push cuando estos restaurantes suban su menú del día o publiquen ofertas flash.
                                 </p>
                             </div>

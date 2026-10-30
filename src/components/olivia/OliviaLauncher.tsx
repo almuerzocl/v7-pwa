@@ -121,7 +121,7 @@ export function OliviaLauncher({ initialStatus = null }: { initialStatus?: Olivi
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src="/images/olivia.svg" alt="" width={48} height={48} className="h-12 w-12 rounded-full shadow-md ring-2 ring-white" />
                 <span className="text-xs font-black leading-none text-zinc-900">OlivIA</span>
-                <span className="rounded-full bg-zinc-900 px-2 py-1 text-[11px] font-bold leading-none text-white">Asistente IA</span>
+                <span className="rounded-full bg-zinc-900 px-2 py-1 text-xs font-bold leading-none text-white">Asistente IA</span>
             </button>
 
             {open && (

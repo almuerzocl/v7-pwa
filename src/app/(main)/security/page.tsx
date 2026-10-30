@@ -62,7 +62,7 @@ export default function SecurityPage() {
                 </Button>
                 <div>
                     <h1 className="text-lg font-black tracking-tight text-slate-900 leading-none">Seguridad</h1>
-                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Protección de Cuenta</p>
+                    <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Protección de Cuenta</p>
                 </div>
             </header>
 
@@ -94,7 +94,7 @@ export default function SecurityPage() {
 
                     <form onSubmit={handleUpdatePassword} className="space-y-4">
                         <div className="space-y-2">
-                            <Label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">Contraseña Actual</Label>
+                            <Label className="text-xs font-black uppercase tracking-widest text-slate-400 ml-1">Contraseña Actual</Label>
                             <Input
                                 type="password"
                                 autoComplete="current-password"
@@ -105,7 +105,7 @@ export default function SecurityPage() {
                             />
                         </div>
                         <div className="space-y-2">
-                            <Label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">Nueva Contraseña</Label>
+                            <Label className="text-xs font-black uppercase tracking-widest text-slate-400 ml-1">Nueva Contraseña</Label>
                             <Input
                                 type="password"
                                 value={passwords.new}
@@ -115,7 +115,7 @@ export default function SecurityPage() {
                             />
                         </div>
                         <div className="space-y-2">
-                            <Label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">Confirmar Contraseña</Label>
+                            <Label className="text-xs font-black uppercase tracking-widest text-slate-400 ml-1">Confirmar Contraseña</Label>
                             <Input
                                 type="password"
                                 value={passwords.confirm}
@@ -141,7 +141,7 @@ export default function SecurityPage() {
                             <AlertCircle className="w-4 h-4" />
                             Sesiones Activas
                         </h3>
-                        <p className="text-[11px] text-rose-600/70 font-bold uppercase tracking-wider">¿Dispositivo compartido?</p>
+                        <p className="text-xs text-rose-600/70 font-bold uppercase tracking-wider">¿Dispositivo compartido?</p>
                     </div>
                     <Button
                         variant="ghost"
@@ -151,7 +151,7 @@ export default function SecurityPage() {
                         <LogOut className="w-5 h-5" />
                         Cerrar Sesión Global
                     </Button>
-                    <p className="text-[10px] text-center text-rose-400 font-bold uppercase tracking-widest">
+                    <p className="text-xs text-center text-rose-400 font-bold uppercase tracking-widest">
                         Al cerrar sesión se perderá el acceso en este navegador.
                     </p>
                 </div>

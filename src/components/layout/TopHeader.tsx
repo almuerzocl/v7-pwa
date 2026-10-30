@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import { getInitials } from "@/lib/core-business/ui-helpers";
 import { LocationSelector } from "./LocationSelector";
+import { NotificationsBell } from "./NotificationsBell";
 
 export function TopHeader() {
     const { user, profile } = useAuth();
@@ -15,6 +16,7 @@ export function TopHeader() {
                 <div className="flex-1 min-w-0">
                     <LocationSelector />
                 </div>
+                {user && <NotificationsBell />}
                 {user && (
                     <Link
                         href="/profile"

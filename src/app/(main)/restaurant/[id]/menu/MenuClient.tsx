@@ -103,7 +103,7 @@ export default function MenuClient({ restaurant, menuItems, categories = [], opt
                             <h1 className="text-lg font-black tracking-tight leading-none">{restaurant.name}</h1>
                             <div className="flex items-center gap-1.5 mt-0.5">
                                 <Clock className="w-3 h-3 text-emerald-600" />
-                                <span className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest">Disponible para hoy</span>
+                                <span className="text-xs font-bold text-emerald-600 uppercase tracking-widest">Disponible para hoy</span>
                             </div>
                         </div>
                     </div>
@@ -168,7 +168,7 @@ export default function MenuClient({ restaurant, menuItems, categories = [], opt
                                                     </Badge>
                                                 )}
                                             </div>
-                                            {groupsOf(item).length > 0 && <span className="block text-[11px] font-bold text-slate-600">Con opciones</span>}
+                                            {groupsOf(item).length > 0 && <span className="block text-xs font-bold text-slate-600">Con opciones</span>}
                                             <p className="text-xs text-slate-500 font-medium leading-relaxed line-clamp-2">
                                                 {item.description || "Un delicioso plato artesanal preparado por nuestros mejores chefs para disfrutar donde quieras."}
                                             </p>

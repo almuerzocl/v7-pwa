@@ -121,7 +121,7 @@ export default function DateTimePicker({ onSelect, selectedDate, selectedTime, a
                     {/* Weekday headers */}
                     <div className="grid grid-cols-7 text-center">
                         {['L','M','X','J','V','S','D'].map(d => (
-                            <span key={d} className="text-[9px] font-black text-muted-foreground uppercase py-1">{d}</span>
+                            <span key={d} className="text-xs font-black text-muted-foreground uppercase py-1">{d}</span>
                         ))}
                     </div>
 
@@ -200,7 +200,7 @@ export default function DateTimePicker({ onSelect, selectedDate, selectedTime, a
                             <p className="text-xs font-bold text-muted-foreground">
                                 {noReservations ? 'Este día el local no recibe reservas' : 'Restaurante cerrado este día'}
                             </p>
-                            <p className="text-[10px] text-muted-foreground/60 mt-0.5">
+                            <p className="text-xs text-muted-foreground/60 mt-0.5">
                                 {noReservations ? 'Está abierto: puedes ir sin reserva, o prueba con otra fecha' : 'Prueba con otra fecha'}
                             </p>
                         </div>

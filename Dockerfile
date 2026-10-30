@@ -34,6 +34,8 @@ ENV NEXT_PUBLIC_PWA_URL=$NEXT_PUBLIC_PWA_URL
 ENV NEXT_TELEMETRY_DISABLED=1
 
 RUN npm install --no-save sharp
+# Red de seguridad: si fallan las pruebas o los tipos, el build (y el despliegue) se detiene.
+RUN npm test
 RUN npm run build
 
 # ---- runner ----

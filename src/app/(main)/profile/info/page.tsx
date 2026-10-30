@@ -37,7 +37,7 @@ interface DiscountInstitution {
 // ─── Section heading ──────────────────────────────────────────────────────────
 function SectionTitle({ children }: { children: React.ReactNode }) {
     return (
-        <h2 className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 px-1 pt-6 pb-1">
+        <h2 className="text-xs font-black uppercase tracking-[0.2em] text-slate-400 px-1 pt-6 pb-1">
             {children}
         </h2>
     );
@@ -193,7 +193,7 @@ export default function MiCuentaInfoPage() {
                 </Button>
                 <div>
                     <h1 className="text-lg font-black tracking-tight text-slate-900 leading-none">Mi Cuenta</h1>
-                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">Información, seguridad y preferencias</p>
+                    <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-0.5">Información, seguridad y preferencias</p>
                 </div>
             </header>
 
@@ -218,7 +218,7 @@ export default function MiCuentaInfoPage() {
                             <Camera className="w-4 h-4" />
                         </button>
                     </div>
-                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-4">
+                    <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-4">
                         Miembro desde {profile.created_at ? new Date(profile.created_at).toLocaleDateString("es-CL", { month: "long", year: "numeric" }) : "---"}
                     </p>
                 </div>
@@ -226,7 +226,7 @@ export default function MiCuentaInfoPage() {
                 {/* Nombre y alias */}
                 <div className="bg-white rounded-[2rem] p-5 shadow-sm border border-slate-100 space-y-4">
                     <div className="space-y-2">
-                        <Label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1 flex items-center gap-2">
+                        <Label className="text-xs font-black uppercase tracking-widest text-slate-400 ml-1 flex items-center gap-2">
                             <Edit3 className="w-3 h-3" /> Nombre Público (Alias)
                         </Label>
                         <Input value={formData.display_name} onChange={e => setFormData(s => ({ ...s, display_name: e.target.value }))}
@@ -234,12 +234,12 @@ export default function MiCuentaInfoPage() {
                     </div>
                     <div className="grid grid-cols-2 gap-3">
                         <div className="space-y-2">
-                            <Label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">Nombre</Label>
+                            <Label className="text-xs font-black uppercase tracking-widest text-slate-400 ml-1">Nombre</Label>
                             <Input value={formData.first_name} onChange={e => setFormData(s => ({ ...s, first_name: e.target.value }))}
                                 className="h-12 rounded-2xl border-slate-100 bg-slate-50/50 font-bold" />
                         </div>
                         <div className="space-y-2">
-                            <Label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">Apellido</Label>
+                            <Label className="text-xs font-black uppercase tracking-widest text-slate-400 ml-1">Apellido</Label>
                             <Input value={formData.last_name} onChange={e => setFormData(s => ({ ...s, last_name: e.target.value }))}
                                 className="h-12 rounded-2xl border-slate-100 bg-slate-50/50 font-bold" />
                         </div>
@@ -249,23 +249,23 @@ export default function MiCuentaInfoPage() {
                 {/* Contacto y dirección */}
                 <div className="bg-white rounded-[2rem] p-5 shadow-sm border border-slate-100 space-y-4">
                     <div className="space-y-2">
-                        <Label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1 flex items-center gap-2">
+                        <Label className="text-xs font-black uppercase tracking-widest text-slate-400 ml-1 flex items-center gap-2">
                             <Mail className="w-3 h-3" /> Correo Electrónico
                         </Label>
                         <div className="h-12 rounded-2xl bg-slate-50 border border-slate-100 flex items-center px-4 font-bold text-slate-400 gap-3">
                             {user.email}
-                            <span className="ml-auto text-[9px] bg-slate-200/50 px-2 py-0.5 rounded-full">LECTURA</span>
+                            <span className="ml-auto text-xs bg-slate-200/50 px-2 py-0.5 rounded-full">LECTURA</span>
                         </div>
                     </div>
                     <div className="space-y-2">
-                        <Label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1 flex items-center gap-2">
+                        <Label className="text-xs font-black uppercase tracking-widest text-slate-400 ml-1 flex items-center gap-2">
                             <Phone className="w-3 h-3" /> Nº Celular
                         </Label>
                         <PhoneInput value={formData.phone} onChange={v => setFormData(s => ({ ...s, phone: v }))}
                             className="h-12 rounded-2xl border-slate-100 bg-slate-50/50 font-bold" />
                     </div>
                     <div className="space-y-2">
-                        <Label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1 flex items-center gap-2">
+                        <Label className="text-xs font-black uppercase tracking-widest text-slate-400 ml-1 flex items-center gap-2">
                             <MapPin className="w-3 h-3" /> Dirección Principal
                         </Label>
                         <AddressAutocomplete
@@ -304,17 +304,17 @@ export default function MiCuentaInfoPage() {
                     </div>
                     <form onSubmit={handleUpdatePassword} className="space-y-3">
                         <div className="space-y-2">
-                            <Label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">Contraseña Actual</Label>
+                            <Label className="text-xs font-black uppercase tracking-widest text-slate-400 ml-1">Contraseña Actual</Label>
                             <Input type="password" autoComplete="current-password" value={passwords.current} onChange={e => setPasswords(s => ({ ...s, current: e.target.value }))}
                                 className="h-12 rounded-2xl border-slate-100 bg-slate-50/50 font-bold" placeholder="Si ya tienes una" />
                         </div>
                         <div className="space-y-2">
-                            <Label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">Nueva Contraseña</Label>
+                            <Label className="text-xs font-black uppercase tracking-widest text-slate-400 ml-1">Nueva Contraseña</Label>
                             <Input type="password" value={passwords.new} onChange={e => setPasswords(s => ({ ...s, new: e.target.value }))}
                                 className="h-12 rounded-2xl border-slate-100 bg-slate-50/50 font-bold" placeholder="8+ caracteres, con letra y número" />
                         </div>
                         <div className="space-y-2">
-                            <Label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">Confirmar Contraseña</Label>
+                            <Label className="text-xs font-black uppercase tracking-widest text-slate-400 ml-1">Confirmar Contraseña</Label>
                             <Input type="password" value={passwords.confirm} onChange={e => setPasswords(s => ({ ...s, confirm: e.target.value }))}
                                 className="h-12 rounded-2xl border-slate-100 bg-slate-50/50 font-bold" placeholder="Repite la contraseña" />
                         </div>
@@ -330,13 +330,13 @@ export default function MiCuentaInfoPage() {
                         <h3 className="font-black text-rose-800 text-sm flex items-center gap-2">
                             <AlertCircle className="w-4 h-4" /> Sesiones Activas
                         </h3>
-                        <p className="text-[10px] text-rose-500 font-bold uppercase tracking-wider mt-0.5">¿Dispositivo compartido?</p>
+                        <p className="text-xs text-rose-500 font-bold uppercase tracking-wider mt-0.5">¿Dispositivo compartido?</p>
                     </div>
                     <Button variant="ghost" onClick={handleSignOut}
                         className="w-full h-12 rounded-2xl font-black gap-3 text-rose-600 hover:bg-rose-100/50 border border-rose-200/50">
                         <LogOut className="w-4 h-4" /> Cerrar Sesión Global
                     </Button>
-                    <p className="text-[9px] text-center text-rose-400 font-bold uppercase tracking-widest">
+                    <p className="text-xs text-center text-rose-400 font-bold uppercase tracking-widest">
                         Al cerrar sesión se perderá el acceso en este navegador.
                     </p>
                 </div>
@@ -360,7 +360,7 @@ export default function MiCuentaInfoPage() {
                                     <ch.icon className="w-4 h-4 text-slate-400" />
                                     <span className="text-sm font-bold text-slate-600">{ch.label}</span>
                                 </div>
-                                <span className={`text-[8px] font-black px-2 py-0.5 rounded uppercase ${ch.color}`}>{ch.badge}</span>
+                                <span className={`text-xs font-black px-2 py-0.5 rounded uppercase ${ch.color}`}>{ch.badge}</span>
                             </div>
                         ))}
                     </div>
@@ -392,7 +392,7 @@ export default function MiCuentaInfoPage() {
                                     </div>
                                     <div className="flex-1 min-w-0">
                                         <p className="font-bold text-foreground truncate text-sm">{inst.name}</p>
-                                        {inst.rules && <p className="text-[11px] text-muted-foreground line-clamp-1">{inst.rules}</p>}
+                                        {inst.rules && <p className="text-xs text-muted-foreground line-clamp-1">{inst.rules}</p>}
                                     </div>
                                     <button disabled={isToggling} onClick={() => handleToggleClub(inst.id, isMember)}
                                         className={`relative w-11 h-6 rounded-full transition-colors shrink-0 ${isMember ? "bg-primary" : "bg-muted"} ${isToggling ? "opacity-50" : ""}`}>

@@ -143,7 +143,7 @@ export default function DiscountClubsPage() {
                                 <div className="flex-1 min-w-0">
                                     <p className="font-bold text-foreground truncate">{inst.name}</p>
                                     {inst.rules && (
-                                        <p className="text-[11px] text-muted-foreground font-medium line-clamp-2">
+                                        <p className="text-xs text-muted-foreground font-medium line-clamp-2">
                                             {inst.rules}
                                         </p>
                                     )}
