@@ -51,3 +51,29 @@ describe('share-invite', () => {
         expect(writeText).toHaveBeenCalled();
     });
 });
+
+import { waDigits, buildWhatsAppUrl, inviteMessageText, copyInviteLink } from '@/lib/share-invite';
+
+describe('share-invite: envío directo por WhatsApp', () => {
+    it('waDigits completa el país en móviles chilenos y descarta lo inválido', () => {
+        expect(waDigits('9 1234 5678')).toBe('56912345678');
+        expect(waDigits('+56 9 1234 5678')).toBe('56912345678');
+        expect(waDigits('56912345678')).toBe('56912345678');
+        for (const v of [null, undefined, '', '12345', '9123']) expect(waDigits(v as any)).toBeNull();
+    });
+    it('con teléfono abre el chat de ese invitado; sin él, WhatsApp pide elegir', () => {
+        expect(buildWhatsAppUrl(base, '+56 9 1234 5678')).toMatch(/^https:\/\/wa\.me\/56912345678\?text=/);
+        expect(buildWhatsAppUrl(base, null)).toMatch(/^https:\/\/wa\.me\/\?text=/);
+    });
+    it('el texto enviado lleva el enlace personal', () => {
+        expect(inviteMessageText(base)).toContain('https://tickets2.almuerzo.cl/v/AB12CD34?g=g-1');
+    });
+    it('copyInviteLink copia el mensaje y devuelve false si el portapapeles falla', async () => {
+        const writeText = vi.fn().mockResolvedValue(undefined);
+        vi.stubGlobal('navigator', { clipboard: { writeText } });
+        expect(await copyInviteLink(base)).toBe(true);
+        expect(writeText.mock.calls[0][0]).toContain('/v/AB12CD34?g=g-1');
+        vi.stubGlobal('navigator', { clipboard: { writeText: vi.fn().mockRejectedValue(new Error('x')) } });
+        expect(await copyInviteLink(base)).toBe(false);
+    });
+});

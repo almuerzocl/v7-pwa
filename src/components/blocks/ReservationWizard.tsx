@@ -21,6 +21,7 @@ import { TicketDigital } from '@/components/TicketDigital';
 import { toast } from 'react-hot-toast';
 import DateTimePicker from './DateTimePicker';
 import InviteesSelector from './InviteesSelector';
+import InvitationsPanel from './InvitationsPanel';
 import ShareReservationModal from './ShareReservationModal';
 import { useAuth } from '@/context/AuthContext';
 
@@ -95,6 +96,8 @@ export default function ReservationWizard({
 
     const [shareToken, setShareToken] = useState<string>('');
     const [createdReservationId, setCreatedReservationId] = useState<string>('');
+    // Reserva recién creada, con los ids de sus invitados: la pantalla final los usa para el envío de enlaces.
+    const [createdRes, setCreatedRes] = useState<any | null>(null);
 
     const [recurrenceRule] = useState<string | null>(null);
     const [userPhone, setUserPhone] = useState('');
@@ -451,6 +454,10 @@ export default function ReservationWizard({
 
                 const confirmedNow = !!(createResult as any).autoApproved;
                 setIsConfirmed(confirmedNow);
+                setCreatedRes({
+                    id: reservation.id, unique_code: reservation.unique_code, status: confirmedNow ? 'CONFIRMADA' : 'PENDIENTE',
+                    date_time: reservationDate.toISOString(), party_size: guestsList.length, restaurant: { name: restaurantName }, guest_data: guestsList,
+                });
 
                 if (confirmedNow) {
                     toast.success('¡Reserva confirmada!', {
@@ -690,6 +697,13 @@ export default function ReservationWizard({
                                 showActions={false}
                             />
                         </div>
+
+                        {createdRes && (createdRes.guest_data || []).some((g: any) => !g.is_organizer) && (
+                            <section className="space-y-2" aria-label="Invitaciones">
+                                <h4 className="font-black text-sm text-foreground">Invitaciones</h4>
+                                <InvitationsPanel res={createdRes} />
+                            </section>
+                        )}
 
                         <div className="space-y-3 pb-4">
                             <Button onClick={onClose}

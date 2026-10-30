@@ -2,8 +2,8 @@
 
 import { useRef, useState } from 'react';
 import ContactCard from '@/components/ContactCard';
-import ContactForm from '@/components/ContactForm';
-import { UserPlus, Search, FileUp } from 'lucide-react';
+import ContactPickerModal from '@/components/blocks/ContactPickerModal';
+import { UserPlus, Search, FileUp, Users } from 'lucide-react';
 import type { Contact } from '@/types';
 import { useAuth } from '@/context/AuthContext';
 import { toast } from 'react-hot-toast';
@@ -33,7 +33,10 @@ export default function InviteesSelector({
     onContactSaved,
 }: InviteesSelectorProps) {
     const { user } = useAuth();
-    const [showForm, setShowForm] = useState(false);
+    const [showPicker, setShowPicker] = useState(false);
+    const [newName, setNewName] = useState('');
+    const [newEmail, setNewEmail] = useState('');
+    const [formError, setFormError] = useState<string | null>(null);
     const [isSaving, setIsSaving] = useState(false);
     const [isImporting, setIsImporting] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -78,6 +81,34 @@ export default function InviteesSelector({
             toast.error('No se pudo leer el archivo');
         } finally {
             setIsImporting(false);
+        }
+    };
+
+    // Invitado nuevo: solo el nombre es obligatorio. Sin correo, al confirmarse la reserva se le da al organizador un enlace de WhatsApp.
+    const addNew = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setFormError(null);
+        const name = newName.trim();
+        const email = newEmail.trim().toLowerCase();
+        if (!name) { setFormError('Escribe el nombre de tu invitado'); return; }
+        if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { setFormError('Revisa el correo: debe ser como nombre@correo.cl'); return; }
+        setIsSaving(true);
+        try {
+            const [first, ...rest] = name.split(/\s+/);
+            const result = await saveContactAction(user?.id || '', { first_name: first, last_name: rest.join(' '), email: email || null, whatsapp_phone: null });
+            if (result.success && result.contact) {
+                onAddInvitee(result.contact as any);
+                onContactSaved?.();
+                setNewName('');
+                setNewEmail('');
+            } else {
+                toast.error('No se pudo guardar el contacto');
+            }
+        } catch (err) {
+            console.error('Error saving contact in selector:', err);
+            toast.error('No se pudo guardar el contacto');
+        } finally {
+            setIsSaving(false);
         }
     };
 
@@ -134,52 +165,60 @@ export default function InviteesSelector({
         <div className="space-y-4">
             <h3 className="font-semibold text-gray-800 mb-2"><UserPlus className="w-5 h-5 inline-block mr-1" /> Invitados</h3>
 
-            {/* List of already selected invitees */}
+            {/* Invitados ya elegidos, con el canal por el que recibirán su invitación */}
             <div className="grid gap-3 md:grid-cols-2">
                 {selected.map((c) => (
-                    <ContactCard
-                        key={c.id}
-                        contact={c}
-                        onEdit={() => { }}
-                        onDelete={() => onRemoveInvitee(c.id)}
-                    />
+                    <div key={c.id} className="space-y-1">
+                        <ContactCard
+                            contact={c}
+                            onEdit={() => { }}
+                            onDelete={() => onRemoveInvitee(c.id)}
+                        />
+                        <p className="text-xs text-gray-500 px-1">
+                            {c.email
+                                ? 'Le enviaremos la invitación por correo cuando se confirme la reserva.'
+                                : 'Te daremos un enlace de WhatsApp para enviársela cuando se confirme la reserva.'}
+                        </p>
+                    </div>
                 ))}
             </div>
 
-            {/* Quick add from existing contacts */}
-            <select
-                className="w-full p-3 border rounded-xl focus:ring-2 focus:ring-orange-500"
-                onChange={(e) => {
-                    const id = e.target.value;
-                    if (!id) return;
-                    const contact = contacts.find((c) => c.id === id);
-                    if (contact) onAddInvitee(contact);
-                }}
+            <button
+                type="button"
+                onClick={() => setShowPicker(true)}
+                className="w-full py-3 bg-orange-50 text-orange-700 rounded-xl hover:bg-orange-100 font-bold text-sm flex items-center justify-center gap-2"
             >
-                <option value="">+ Añadir de mis contactos</option>
-                {contacts.map((c) => (
-                    <option key={c.id} value={c.id}>
-                        {c.first_name} {c.last_name}
-                    </option>
-                ))}
-            </select>
+                <Users className="w-4 h-4" /> Mis contactos{contacts.length > 0 ? ` (${contacts.length})` : ''}
+            </button>
 
-            <div className="grid grid-cols-2 gap-3">
-                <button
-                    onClick={() => setShowForm(true)}
-                    className="py-2 bg-gray-100 text-gray-800 rounded-xl hover:bg-gray-200 font-medium text-sm"
-                >
-                    + Nuevo Contacto
+            {/* Invitado nuevo: nombre y, si quiere, correo. En estos campos no se ofrece autocompletar: iOS sugeriría los datos del propio organizador. */}
+            <form onSubmit={addNew} className="rounded-2xl border border-dashed border-gray-300 p-3 space-y-2">
+                <p className="text-sm font-bold text-gray-800">Invitado nuevo</p>
+                <label htmlFor="new-invitee-name" className="sr-only">Nombre</label>
+                <input id="new-invitee-name" type="text" autoComplete="off" value={newName} onChange={(e) => setNewName(e.target.value)}
+                    placeholder="Nombre" className="w-full h-11 px-3 border rounded-xl text-base focus:ring-2 focus:ring-orange-500" />
+                <label htmlFor="new-invitee-email" className="sr-only">Correo (opcional)</label>
+                <input id="new-invitee-email" type="email" inputMode="email" autoComplete="off" value={newEmail} onChange={(e) => setNewEmail(e.target.value)}
+                    placeholder="Correo (opcional)" className="w-full h-11 px-3 border rounded-xl text-base focus:ring-2 focus:ring-orange-500" />
+                <p className="text-xs text-gray-500">
+                    {newEmail.trim() ? 'Se enviará por correo cuando el restaurante confirme la reserva.' : 'Sin correo, te damos un enlace de WhatsApp para enviárselo.'}
+                </p>
+                {formError && <p role="alert" className="text-xs font-semibold text-red-600">{formError}</p>}
+                <button type="submit" disabled={isSaving}
+                    className="w-full h-11 rounded-xl bg-gray-900 text-white font-bold text-sm disabled:opacity-50">
+                    {isSaving ? 'Guardando...' : 'Agregar invitado'}
                 </button>
-                <button
-                    disabled={isImporting}
-                    onClick={handleAgendaSearch}
-                    className="py-2 bg-blue-50 text-blue-700 rounded-xl hover:bg-blue-100 font-medium text-sm flex items-center justify-center gap-2 disabled:opacity-50"
-                >
-                    {canImportNatively ? <Search className="w-4 h-4" /> : <FileUp className="w-4 h-4" />}
-                    {isImporting ? 'Importando...' : canImportNatively ? 'Búsqueda en agenda de contactos' : 'Importar tarjeta de contacto'}
-                </button>
-            </div>
+            </form>
+
+            <button
+                type="button"
+                disabled={isImporting}
+                onClick={handleAgendaSearch}
+                className="w-full py-2 bg-blue-50 text-blue-700 rounded-xl hover:bg-blue-100 font-medium text-sm flex items-center justify-center gap-2 disabled:opacity-50"
+            >
+                {canImportNatively ? <Search className="w-4 h-4" /> : <FileUp className="w-4 h-4" />}
+                {isImporting ? 'Importando...' : canImportNatively ? 'Búsqueda en agenda de contactos' : 'Importar tarjeta de contacto'}
+            </button>
             {!canImportNatively && (
                 <>
                     <input ref={fileInputRef} type="file" multiple accept=".vcf,.vcard,text/vcard,text/x-vcard,text/directory" className="hidden" onChange={handleVCardFile} />
@@ -189,37 +228,13 @@ export default function InviteesSelector({
                 </>
             )}
 
-            {showForm && (
-                <div className="bg-white/50 backdrop-blur-sm p-4 rounded-2xl border border-dashed border-gray-200 animate-in fade-in zoom-in duration-200">
-                    <ContactForm
-                        onCancel={() => setShowForm(false)}
-                        isSubmitting={isSaving}
-                        onSubmit={async (data) => {
-                            setIsSaving(true);
-                            try {
-                                const result = await saveContactAction(user?.id || '', {
-                                    first_name: data.first_name,
-                                    last_name: data.last_name,
-                                    email: data.email || null,
-                                    whatsapp_phone: data.whatsapp_phone || null,
-                                });
-
-                                if (result.success && result.contact) {
-                                    onAddInvitee(result.contact as any);
-                                    onContactSaved?.();
-                                    setShowForm(false);
-                                } else {
-                                    toast.error('No se pudo guardar el contacto');
-                                }
-                            } catch (err) {
-                                console.error('Error saving contact in selector:', err);
-                                toast.error('No se pudo guardar el contacto');
-                            } finally {
-                                setIsSaving(false);
-                            }
-                        }}
-                    />
-                </div>
+            {showPicker && (
+                <ContactPickerModal
+                    contacts={contacts}
+                    alreadyIds={selected.map((c) => c.id)}
+                    onConfirm={(picked) => { picked.forEach(onAddInvitee); setShowPicker(false); }}
+                    onClose={() => setShowPicker(false)}
+                />
             )}
         </div>
     );
