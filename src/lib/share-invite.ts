@@ -64,3 +64,44 @@ export async function shareInvite(i: InviteInput): Promise<ShareResult> {
         return 'failed';
     }
 }
+
+// ── Envío directo por WhatsApp, copia del enlace y texto del mensaje (pantalla «Invitaciones») ──
+
+/** Teléfono → dígitos para wa.me (con país). Chile: 9 dígitos que empiezan en 9 se completan con 56. Sin dato válido: null. */
+export function waDigits(phone?: string | null): string | null {
+    const d = (phone || '').replace(/\D/g, '');
+    if (d.length === 9 && d.startsWith('9')) return `56${d}`;
+    if (d.length >= 10 && d.length <= 15) return d;
+    return null;
+}
+
+/** Mensaje completo (texto + enlace personal), tal como se envía. */
+export function inviteMessageText(i: InviteInput): string {
+    const { text, url } = buildInviteMessage(i);
+    return `${text} ${url}`;
+}
+
+/** Con teléfono, abre directo el chat de ese invitado; sin él, WhatsApp pide elegir el chat. */
+export function buildWhatsAppUrl(i: InviteInput, phone?: string | null): string {
+    const d = waDigits(phone);
+    return `https://wa.me/${d ?? ''}?text=${encodeURIComponent(inviteMessageText(i))}`;
+}
+
+/** true si el navegador abrió WhatsApp (o su pestaña). No hay forma de saber si el mensaje se envió. */
+export function openWhatsApp(i: InviteInput, phone?: string | null): boolean {
+    try {
+        const w = typeof window !== 'undefined' ? window.open(buildWhatsAppUrl(i, phone), '_blank', 'noopener') : null;
+        return !!w;
+    } catch {
+        return false;
+    }
+}
+
+export async function copyInviteLink(i: InviteInput): Promise<boolean> {
+    try {
+        await navigator.clipboard.writeText(inviteMessageText(i));
+        return true;
+    } catch {
+        return false;
+    }
+}
