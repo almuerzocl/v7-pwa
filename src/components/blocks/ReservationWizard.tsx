@@ -504,7 +504,7 @@ export default function ReservationWizard({
                 <div className="px-5 py-4 border-b border-border/50 flex justify-between items-center bg-muted/30 sticky top-0 z-10 backdrop-blur-lg shrink-0">
                     <div>
                         <h2 className="font-extrabold text-lg text-foreground tracking-tight">Reservar Sillas</h2>
-                        <p className="text-[11px] text-muted-foreground font-medium flex items-center gap-1 mt-0.5">
+                        <p className="text-xs text-muted-foreground font-medium flex items-center gap-1 mt-0.5">
                             <MapPin className="w-3 h-3 text-primary" /> {restaurantName}
                         </p>
                     </div>
@@ -535,11 +535,14 @@ export default function ReservationWizard({
                             {/* 2. Invitados */}
                             <section className="space-y-2">
                                 <h3 className="font-bold text-sm text-foreground tracking-tight flex items-center gap-2">
-                                    <Users className="w-4 h-4 text-primary" /> Invitados
-                                    <span className="ml-auto text-[11px] font-normal text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
+                                    <Users className="w-4 h-4 text-primary" /> ¿Cuántas personas?
+                                    <span className="ml-auto text-xs font-bold text-foreground bg-muted px-2.5 py-1 rounded-full" aria-live="polite">
                                         {guests} {guests === 1 ? 'persona' : 'personas'}
                                     </span>
                                 </h3>
+                                <p className="text-xs text-muted-foreground">
+                                    Tú{selectedInvitees.length > 0 ? ` + ${selectedInvitees.length} invitado${selectedInvitees.length === 1 ? '' : 's'}` : ''}. Añade invitados para reservar para más personas.
+                                </p>
                                 <InviteesSelector
                                     contacts={contacts}
                                     selected={selectedInvitees}
@@ -585,9 +588,13 @@ export default function ReservationWizard({
                         {/* Footer: resumen inline + botón */}
                         <div className="shrink-0 border-t border-border/50 bg-background/80 backdrop-blur-md px-5 pt-3 pb-5 space-y-3" style={{ paddingBottom: 'max(1.25rem, env(safe-area-inset-bottom, 1.25rem))' }}>
 
+                            <p className="text-xs text-muted-foreground">
+                                Si no puedes ir, cancela hasta 1 hora antes de la reserva: así cuidas tu reputación.
+                            </p>
+
                             {/* Resumen compacto */}
                             {(date || time || guests > 1) && (
-                                <div className="flex items-center gap-3 text-[11px] text-muted-foreground font-medium flex-wrap">
+                                <div className="flex items-center gap-3 text-xs text-muted-foreground font-medium flex-wrap">
                                     {date && (
                                         <span className="flex items-center gap-1 bg-muted px-2 py-1 rounded-lg">
                                             <Calendar className="w-3 h-3" />

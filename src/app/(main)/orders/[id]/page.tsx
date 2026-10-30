@@ -211,7 +211,7 @@ function OrderDetailPageContent() {
                         variant="ghost"
                         onClick={handleCancelRequest}
                         disabled={cancelling}
-                        className="w-full text-rose-500 hover:text-rose-600 hover:bg-rose-50 rounded-xl font-bold py-5 text-[11px] uppercase tracking-widest border border-rose-100"
+                        className="w-full text-rose-500 hover:text-rose-600 hover:bg-rose-50 rounded-xl font-bold py-5 text-xs uppercase tracking-widest border border-rose-100"
                     >
                         {cancelling ? (
                             <span className="flex items-center gap-2">

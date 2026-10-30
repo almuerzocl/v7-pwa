@@ -154,13 +154,13 @@ function ReservationDetailPageContent() {
                 return;
             }
             if (result.impactsReputation) {
-                toast.error("Reserva cancelada. Dado que fue con menos de 1 hora de anticipación, esto afecta su reputación.", {
-                    duration: 5000, icon: "⚠️",
+                toast("Reserva cancelada. Como fue con menos de 1 hora de anticipación, cuenta en tu reputación.", {
+                    duration: 8000, icon: "⚠️",
                     style: { borderRadius: '1rem', background: '#333', color: '#fff' }
                 });
             } else {
-                toast.success("Su reserva fue cancelada exitosamente. Dado que respetó el tiempo mínimo, esto no tiene impacto en su reputación.", {
-                    duration: 5000, icon: "✓",
+                toast.success("Reserva cancelada. Cancelaste con tiempo, así que no afecta tu reputación.", {
+                    duration: 8000, icon: "✓",
                     style: { borderRadius: '1rem', background: '#333', color: '#fff' }
                 });
             }
@@ -209,7 +209,7 @@ function ReservationDetailPageContent() {
                     variant="ghost"
                     onClick={handleCancelRequest}
                     disabled={cancelling}
-                    className="w-full text-rose-500 hover:text-rose-600 hover:bg-rose-50 rounded-xl font-bold py-5 text-[11px] uppercase tracking-widest border border-rose-100"
+                    className="w-full text-rose-500 hover:text-rose-600 hover:bg-rose-50 rounded-xl font-bold py-5 text-xs uppercase tracking-widest border border-rose-100"
                 >
                     {cancelling ? (
                         <span className="flex items-center gap-2">
@@ -227,23 +227,31 @@ function ReservationDetailPageContent() {
 
             {/* Late cancellation confirmation dialog */}
             {showCancelConfirm && (
-                <div className="fixed inset-0 z-[9999] bg-black/50 flex items-center justify-center p-6 animate-in fade-in duration-200">
-                    <div className="bg-card rounded-3xl p-6 max-w-sm w-full shadow-2xl space-y-5 animate-in zoom-in-95 duration-200">
+                <div
+                    className="fixed inset-0 z-[9999] bg-black/50 flex items-center justify-center p-6 animate-in fade-in duration-200"
+                    onKeyDown={(e) => { if (e.key === 'Escape') setShowCancelConfirm(false); }}
+                >
+                    <div
+                        role="alertdialog"
+                        aria-modal="true"
+                        aria-labelledby="cancel-dialog-title"
+                        aria-describedby="cancel-dialog-desc"
+                        className="bg-card rounded-3xl p-6 max-w-sm w-full shadow-2xl space-y-5 animate-in zoom-in-95 duration-200">
                         <div className="flex items-center gap-3">
                             <div className="bg-rose-100 p-3 rounded-2xl">
                                 <XCircle className="w-6 h-6 text-rose-600" />
                             </div>
-                            <h3 className="font-black text-lg text-foreground">Cancelar Reserva</h3>
+                            <h3 id="cancel-dialog-title" className="font-black text-lg text-foreground">¿Cancelar tu reserva?</h3>
                         </div>
-                        <p className="text-sm text-muted-foreground leading-relaxed">
-                            Si usted cancela ahora su reserva, perjudicará su reputación. ¿Estás seguro?
+                        <p id="cancel-dialog-desc" className="text-sm text-muted-foreground leading-relaxed">
+                            {reservation ? `Tu reserva es ${format(new Date(reservation.date_time), "EEEE d 'de' MMMM 'a las' HH:mm", { locale: es })}. ` : ""}Como faltan menos de 1 hora, esta cancelación cuenta en tu reputación.
                         </p>
                         <div className="grid grid-cols-2 gap-3 pt-2">
-                            <Button variant="outline" className="rounded-xl h-12 font-bold" onClick={() => setShowCancelConfirm(false)}>
-                                No
+                            <Button autoFocus variant="outline" className="rounded-xl h-12 font-bold" onClick={() => setShowCancelConfirm(false)}>
+                                Mantener reserva
                             </Button>
                             <Button className="rounded-xl h-12 font-bold bg-rose-600 hover:bg-rose-700 text-white" onClick={performCancel}>
-                                Sí, cancelar
+                                Cancelar reserva
                             </Button>
                         </div>
                     </div>

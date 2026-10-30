@@ -1,10 +1,10 @@
 "use server";
 
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { createClient as createServerClient } from "@/utils/supabase/server";
 import { rateLimit } from "@/lib/rate-limit";
 
-let _supabaseAdmin: ReturnType<typeof createClient> | null = null;
+let _supabaseAdmin: SupabaseClient<any> | null = null;
 function supabaseAdmin() {
     if (!_supabaseAdmin) {
         _supabaseAdmin = createClient(

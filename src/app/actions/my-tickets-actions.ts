@@ -4,12 +4,12 @@
 // auth.getUser(). Reemplazan las consultas del navegador que dependían de la policy "Authenticated access by
 // unique_code" (migración 030). La relación con el ticket la decide `isRelatedToTicket`, la misma regla del token
 // de visor; nunca la sesión del navegador ni un uid enviado por el cliente.
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { createClient as createSessionClient } from "@/utils/supabase/server";
 import { rateLimit } from "@/lib/rate-limit";
 import { guestMatchesContact, isRelatedToTicket, ticketGuests } from "@/lib/ticket-viewer-token";
 
-let _admin: ReturnType<typeof createClient> | null = null;
+let _admin: SupabaseClient<any> | null = null;
 function admin() {
     if (!_admin) {
         _admin = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!, {

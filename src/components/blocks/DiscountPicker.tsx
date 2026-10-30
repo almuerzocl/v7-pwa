@@ -78,7 +78,7 @@ export function DiscountPicker({ serviceLabel, discounts, unavailable, selected,
                                 <div>
                                     <p className="font-bold text-sm">{d.institution_name}</p>
                                     <p className="text-xs text-muted-foreground">{d.discount_name}</p>
-                                    {d.conditions && <p className="text-[11px] text-muted-foreground mt-0.5">{d.conditions}</p>}
+                                    {d.conditions && <p className="text-xs text-muted-foreground mt-0.5">{d.conditions}</p>}
                                 </div>
                             </div>
                             <span className="bg-emerald-600 text-white px-3 py-1 rounded-xl font-bold text-sm shrink-0 ml-2">

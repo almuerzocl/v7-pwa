@@ -285,7 +285,7 @@ export default function RestaurantDetailClient({ restaurant, id }: Props) {
                                     {restaurant.name}
                                 </h1>
                                 <div className="flex items-center gap-2">
-                                    <Badge variant="secondary" className="bg-primary/10 text-primary border-none text-[10px] font-bold uppercase tracking-widest px-2 shadow-none">
+                                    <Badge variant="secondary" className="bg-primary/10 text-primary border-none text-xs font-bold uppercase tracking-widest px-2 shadow-none">
                                         {restaurant.cuisine_type || 'Gourmet'}
                                     </Badge>
                                     <div className="flex items-center gap-1 text-xs font-bold text-slate-400">
@@ -306,13 +306,13 @@ export default function RestaurantDetailClient({ restaurant, id }: Props) {
                     {/* Navigation Tabs */}
                     <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                         <TabsList className="grid grid-cols-3 bg-slate-50 p-1.5 rounded-2xl h-14 border border-slate-100 mb-6">
-                            <TabsTrigger value="info" className="rounded-xl font-bold text-[11px] uppercase tracking-wider data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-primary">
+                            <TabsTrigger value="info" className="rounded-xl font-bold text-xs uppercase tracking-wider data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-primary">
                                 <Info className="w-3.5 h-3.5 mr-1.5" /> Detalles
                             </TabsTrigger>
-                            <TabsTrigger value="hours" className="rounded-xl font-bold text-[11px] uppercase tracking-wider data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-primary">
+                            <TabsTrigger value="hours" className="rounded-xl font-bold text-xs uppercase tracking-wider data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-primary">
                                 <Clock className="w-3.5 h-3.5 mr-1.5" /> Horarios
                             </TabsTrigger>
-                            <TabsTrigger value="spaces" className="rounded-xl font-bold text-[11px] uppercase tracking-wider data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-primary">
+                            <TabsTrigger value="spaces" className="rounded-xl font-bold text-xs uppercase tracking-wider data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-primary">
                                 <Users className="w-3.5 h-3.5 mr-1.5" /> Espacios
                             </TabsTrigger>
                         </TabsList>
@@ -325,7 +325,7 @@ export default function RestaurantDetailClient({ restaurant, id }: Props) {
                                         <MapPin className="w-5 h-5 text-primary" />
                                     </div>
                                     <div className="flex-1">
-                                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1 text-xs">Ubicación</p>
+                                        <p className="text-xs font-black text-slate-400 uppercase tracking-widest leading-none mb-1 text-xs">Ubicación</p>
                                         <p className="text-sm font-bold text-slate-800 tracking-tight">{addressStr}</p>
                                     </div>
                                 </div>
@@ -335,7 +335,7 @@ export default function RestaurantDetailClient({ restaurant, id }: Props) {
                                             <Phone className="w-5 h-5 text-primary" />
                                         </div>
                                         <div className="flex-1">
-                                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1 text-xs">Teléfono</p>
+                                            <p className="text-xs font-black text-slate-400 uppercase tracking-widest leading-none mb-1 text-xs">Teléfono</p>
                                             <p className="text-sm font-bold text-slate-800 tracking-tight">{restaurant.phone}</p>
                                         </div>
                                         <a
@@ -352,7 +352,7 @@ export default function RestaurantDetailClient({ restaurant, id }: Props) {
                                         <Smartphone className="w-5 h-5 text-primary" />
                                     </div>
                                     <div className="flex-1">
-                                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1 text-xs">Reservas Digitales</p>
+                                        <p className="text-xs font-black text-slate-400 uppercase tracking-widest leading-none mb-1 text-xs">Reservas Digitales</p>
                                         <p className="text-sm font-bold text-slate-800 tracking-tight">Confirmación Inmediata v5</p>
                                     </div>
                                 </div>
@@ -363,7 +363,7 @@ export default function RestaurantDetailClient({ restaurant, id }: Props) {
                                 <div className="grid grid-cols-2 gap-3">
                                     {restaurant.amenities.map((amenity: any, idx: number) => (
                                         <div key={idx} className="flex items-center gap-2 p-3 bg-white border border-slate-100 rounded-2xl shadow-sm">
-                                            <span className="text-[11px] font-bold text-slate-600">{amenity}</span>
+                                            <span className="text-xs font-bold text-slate-600">{amenity}</span>
                                         </div>
                                     ))}
                                 </div>
@@ -393,7 +393,7 @@ export default function RestaurantDetailClient({ restaurant, id }: Props) {
                                                 <span className="font-bold text-sm tracking-tight">{label}</span>
                                                 <div className="flex items-center gap-2">
                                                     <span className="text-xs font-black mono text-primary">{hoursStr}</span>
-                                                    {isToday && <Badge className="bg-emerald-500 text-[8px] h-4 rounded-full border-none">HOY</Badge>}
+                                                    {isToday && <Badge className="bg-emerald-500 text-xs h-4 rounded-full border-none">HOY</Badge>}
                                                 </div>
                                             </div>
                                         );
@@ -415,12 +415,12 @@ export default function RestaurantDetailClient({ restaurant, id }: Props) {
                                                     </div>
                                                     <div>
                                                         <h4 className="font-black text-slate-800 uppercase tracking-tight text-sm">{space}</h4>
-                                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Capacidad máxima</p>
+                                                        <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Capacidad máxima</p>
                                                     </div>
                                                 </div>
                                                 <div className="text-right">
                                                     <span className="text-2xl font-black text-slate-900">{cap}</span>
-                                                    <span className="text-[10px] font-black text-slate-400 uppercase ml-1">Lugares</span>
+                                                    <span className="text-xs font-black text-slate-400 uppercase ml-1">Lugares</span>
                                                 </div>
                                             </div>
                                         ))
@@ -456,8 +456,8 @@ export default function RestaurantDetailClient({ restaurant, id }: Props) {
                     >
                         <CalendarCheck className="w-4 h-4 group-hover:scale-110 transition-transform" />
                         <div className="text-center flex flex-col">
-                            <span className="text-[10px] uppercase tracking-tight">Reservar Mesa</span>
-                            <span className="text-[7px] opacity-60 font-black uppercase tracking-[0.1em]">Instantáneo</span>
+                            <span className="text-xs uppercase tracking-tight">Reservar Mesa</span>
+                            <span className="text-xs opacity-60 font-black uppercase tracking-[0.1em]">Instantáneo</span>
                         </div>
                     </Button>
 
@@ -474,8 +474,8 @@ export default function RestaurantDetailClient({ restaurant, id }: Props) {
                     >
                         <ShoppingBag className="w-4 h-4 group-hover:scale-110 transition-transform" />
                         <div className="text-center flex flex-col">
-                            <span className="text-[10px] uppercase tracking-tight">Pedir p/ Llevar</span>
-                            <span className="text-[7px] opacity-70 font-black uppercase tracking-[0.1em]">Menú Digital</span>
+                            <span className="text-xs uppercase tracking-tight">Pedir p/ Llevar</span>
+                            <span className="text-xs opacity-70 font-black uppercase tracking-[0.1em]">Menú Digital</span>
                         </div>
                     </Button>
                 </div>

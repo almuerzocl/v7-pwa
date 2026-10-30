@@ -74,7 +74,7 @@ export default function SubscriptionsPage() {
                     </Button>
                     <div>
                         <h1 className="text-lg font-black tracking-tight text-slate-900 leading-none">Instituciones y Beneficios</h1>
-                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Convenios y Descuentos</p>
+                        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Convenios y Descuentos</p>
                     </div>
                 </div>
             </header>
@@ -88,7 +88,7 @@ export default function SubscriptionsPage() {
                     <div className="relative z-10 space-y-6">
                         <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-white/15 rounded-full border border-white/20 backdrop-blur-md">
                             {isElite ? <Crown className="w-3 h-3 text-yellow-400" /> : <Award className="w-3 h-3 text-white/80" />}
-                            <span className="text-[10px] uppercase font-black tracking-[0.2em] text-white">Nivel de Miembro</span>
+                            <span className="text-xs uppercase font-black tracking-[0.2em] text-white">Nivel de Miembro</span>
                         </div>
                         <div className="space-y-1">
                             <h2 className="text-4xl font-black tracking-tighter uppercase leading-none">
@@ -101,13 +101,13 @@ export default function SubscriptionsPage() {
                         {!isElite ? (
                             <div className="space-y-4 pt-2">
                                 <ul className="space-y-2">
-                                    <li className="flex items-center gap-2 text-[11px] font-bold text-white/90">
+                                    <li className="flex items-center gap-2 text-xs font-bold text-white/90">
                                         <CheckCircle2 className="w-3.5 h-3.5 text-indigo-300" /> Operaciones sin límite (la cuenta gratuita tiene tope diario y semanal)
                                     </li>
-                                    <li className="flex items-center gap-2 text-[11px] font-bold text-white/90">
+                                    <li className="flex items-center gap-2 text-xs font-bold text-white/90">
                                         <CheckCircle2 className="w-3.5 h-3.5 text-indigo-300" /> Reputación en 100 % mientras tu cuenta sea Elite
                                     </li>
-                                    <li className="flex items-center gap-2 text-[11px] font-bold text-white/90">
+                                    <li className="flex items-center gap-2 text-xs font-bold text-white/90">
                                         <CheckCircle2 className="w-3.5 h-3.5 text-indigo-300" /> Una sola cuenta puede organizar reservas y pedidos para otras personas
                                     </li>
                                 </ul>
@@ -121,7 +121,7 @@ export default function SubscriptionsPage() {
                                             <a href={ELITE_PRODUCT_URL} target="_blank" rel="noopener noreferrer">Subir a Elite</a>
                                         </Button>
                                         {user.email && (
-                                            <p className="text-[11px] font-bold text-white/80">
+                                            <p className="text-xs font-bold text-white/80">
                                                 Compra con este mismo correo: <span className="break-all">{user.email}</span>. La cuenta Elite se usa con un solo correo.
                                             </p>
                                         )}
@@ -143,7 +143,7 @@ export default function SubscriptionsPage() {
                 <div className="space-y-4">
                     <div className="flex items-center justify-between px-1">
                         <h3 className="font-black text-xl tracking-tight text-slate-800">Mis Instituciones</h3>
-                        <div className="bg-slate-200/50 px-2.5 py-1 rounded-full text-[10px] font-black text-slate-500 uppercase">
+                        <div className="bg-slate-200/50 px-2.5 py-1 rounded-full text-xs font-black text-slate-500 uppercase">
                             {institutions.length} Activas
                         </div>
                     </div>
@@ -184,7 +184,7 @@ export default function SubscriptionsPage() {
                     </div>
                     <div className="flex-1">
                         <h4 className="font-black text-slate-800 text-sm">Explorar Convenios</h4>
-                        <p className="text-[11px] text-slate-500 font-medium leading-tight">Ver todas las instituciones con beneficios activos.</p>
+                        <p className="text-xs text-slate-500 font-medium leading-tight">Ver todas las instituciones con beneficios activos.</p>
                     </div>
                     <ExternalLink className="w-4 h-4 text-slate-300" />
                 </div>
@@ -207,9 +207,9 @@ function BenefitCard({ institution }: { institution: any }) {
                 <div className="space-y-1">
                     <h4 className="font-black text-slate-800 text-sm group-hover:text-indigo-600 transition-colors">{institution?.name || 'Institución'}</h4>
                     {institution?.rules && (
-                        <p className="text-[11px] font-medium text-slate-400 leading-tight line-clamp-2 max-w-[200px]">{institution.rules}</p>
+                        <p className="text-xs font-medium text-slate-400 leading-tight line-clamp-2 max-w-[200px]">{institution.rules}</p>
                     )}
-                    <div className={`inline-flex px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-tighter ${institution?.is_active ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-500'}`}>
+                    <div className={`inline-flex px-2 py-0.5 rounded-full text-xs font-black uppercase tracking-tighter ${institution?.is_active ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-500'}`}>
                         {institution?.is_active ? 'Activo' : 'Inactivo'}
                     </div>
                 </div>

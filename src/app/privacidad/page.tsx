@@ -29,7 +29,7 @@ export default function PrivacidadPage() {
             <div className="max-w-2xl mx-auto space-y-8">
                 <div className="text-center space-y-2">
                     <h1 className="text-3xl font-black tracking-tight text-zinc-900">Política de Privacidad</h1>
-                    <p className="text-sm text-zinc-500 font-bold">Almuerzo.cl — Última actualización: 25 de octubre de 2026</p>
+                    <p className="text-sm text-zinc-500 font-bold">Almuerzo.cl — Última actualización: 30 de octubre de 2026</p>
                 </div>
 
                 <div className="bg-white rounded-3xl border border-zinc-100 p-8 sm:p-10 space-y-6 text-sm text-zinc-700 leading-relaxed shadow-sm">
@@ -51,8 +51,8 @@ export default function PrivacidadPage() {
                             <><strong>Cuenta:</strong> nombre, apellido, correo, teléfono (opcional) y foto de perfil si entras con Google. Para crear y proteger tu cuenta (contrato).</>,
                             <><strong>Reservas:</strong> restaurante, fecha, hora, cantidad de personas y solicitudes especiales (contrato).</>,
                             <><strong>Pedidos para retirar:</strong> productos, monto, hora de retiro, y el nombre y teléfono del pedido (contrato).</>,
-                            <><strong>Invitados:</strong> nombre y correo de las personas que agregas a una reserva, para enviarles la invitación y el ticket. Tú declaras que tienes derecho a compartir esos datos (ver sección 5).</>,
-                            <><strong>Contactos guardados:</strong> nombre, correo y WhatsApp, para agregarlos rápido a tus reservas. Comparamos esos teléfonos con las cuentas existentes para mostrarte cuáles ya usan Almuerzo.cl.</>,
+                            <><strong>Invitados:</strong> nombre y, si los entregas, correo y teléfono de las personas que agregas a una reserva (al reservar o después, mientras no llegue la hora), para enviarles la invitación y el ticket. Tú declaras que tienes derecho a compartir esos datos (ver sección 5).</>,
+                            <><strong>Contactos guardados:</strong> nombre, correo y WhatsApp, para agregarlos rápido a tus reservas. Comparamos esos teléfonos con las cuentas existentes para mostrarte cuáles ya usan Almuerzo.cl. Los obtenemos solo si tú los escribes, los eliges en el selector de contactos de tu teléfono (disponible en Android) o importas una tarjeta de contacto (.vcf); nunca leemos tu agenda completa. El archivo .vcf se lee en tu dispositivo y no se sube: solo guardamos los contactos que contiene.</>,
                             <><strong>Reputación como comensal:</strong> se calcula con tus reservas y pedidos cumplidos y no cumplidos de los últimos 30 días (ver sección 8). Base: interés legítimo en que el servicio funcione para todos y en limitar abusos.</>,
                             <><strong>Ubicación:</strong> la dirección que escribes (con autocompletado de Google Maps) o tu ubicación GPS si das el permiso en tu dispositivo, y la dirección por defecto si decides guardarla. Para mostrarte locales cercanos. Puedes negar el permiso y usar la app igual.</>,
                             <><strong>Descuentos:</strong> instituciones o convenios a los que te asocias, para aplicarte descuentos.</>,
@@ -85,7 +85,7 @@ export default function PrivacidadPage() {
                     </Section>
 
                     <Section title="5. Datos de invitados y de terceros">
-                        <p>Si agregas a alguien como invitado, nos entregas su nombre y correo para que reciba la invitación; hazlo solo si esa persona te lo permite. Si recibiste una invitación y no quieres que tengamos tus datos, escríbenos a {mail}. Los tickets públicos muestran los datos enmascarados.</p>
+                        <p>Si agregas a alguien como invitado, nos entregas su nombre y, si los tienes, su correo y teléfono para que reciba la invitación; hazlo solo si esa persona te lo permite. Cada invitado tiene un enlace personal de invitación: si lo reenvías o lo compartes en un grupo, cualquiera que lo abra podrá responder por esa persona, así que envíaselo solo a ella. Los mensajes que envías por WhatsApp u otra aplicación salen desde tu teléfono; Almuerzo.cl no los ve. Si recibiste una invitación y no quieres que tengamos tus datos, escríbenos a {mail}. Los tickets públicos muestran los datos enmascarados.</p>
                     </Section>
 
                     <Section title="6. Transferencias internacionales">

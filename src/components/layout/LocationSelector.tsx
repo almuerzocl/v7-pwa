@@ -111,7 +111,7 @@ export function LocationSelector() {
                 onClick={() => setIsOpen(true)}
                 className="flex flex-col flex-1 truncate items-start text-left outline-none group"
             >
-                <span className="text-[10px] font-semibold tracking-wider text-muted-foreground uppercase flex items-center gap-1 group-hover:text-primary transition-colors">
+                <span className="text-xs font-semibold tracking-wider text-muted-foreground uppercase flex items-center gap-1 group-hover:text-primary transition-colors">
                     <MapPin className="w-3 h-3 text-primary" /> Quiero buscar en la dirección
                 </span>
                 <div className="flex items-center gap-1 w-full">

@@ -94,11 +94,11 @@ export default function RestablecerContrasenaPage() {
                         <form onSubmit={submit} className="space-y-5">
                             <p className="text-sm text-zinc-500">{PASSWORD_RULES_TEXT}</p>
                             <div className="space-y-2">
-                                <Label htmlFor="np" className="text-[11px] font-black uppercase tracking-widest text-zinc-400">Nueva contraseña</Label>
+                                <Label htmlFor="np" className="text-xs font-black uppercase tracking-widest text-zinc-400">Nueva contraseña</Label>
                                 <Input id="np" type="password" autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} className="h-14 rounded-2xl" />
                             </div>
                             <div className="space-y-2">
-                                <Label htmlFor="np2" className="text-[11px] font-black uppercase tracking-widest text-zinc-400">Repite la contraseña</Label>
+                                <Label htmlFor="np2" className="text-xs font-black uppercase tracking-widest text-zinc-400">Repite la contraseña</Label>
                                 <Input id="np2" type="password" autoComplete="new-password" value={confirm} onChange={(e) => setConfirm(e.target.value)} className="h-14 rounded-2xl" />
                             </div>
                             {error && <p role="alert" className="text-sm text-red-600">{error}</p>}

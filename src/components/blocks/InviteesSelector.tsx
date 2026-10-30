@@ -1,17 +1,18 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import ContactCard from '@/components/ContactCard';
 import ContactForm from '@/components/ContactForm';
-import { UserPlus, Search } from 'lucide-react';
+import { UserPlus, Search, FileUp } from 'lucide-react';
 import type { Contact } from '@/types';
 import { useAuth } from '@/context/AuthContext';
 import { toast } from 'react-hot-toast';
 import { saveContactAction } from '@/app/actions/contacts-actions';
+import { parseVCards, normalizePhone, VCARD_MAX_BYTES } from '@/lib/vcard';
 
 // Only Android Chrome implements the Contact Picker API today. On iOS and
-// desktop there's no picker to fall back to, so the same button opens the
-// manual form instead, relying on autocomplete for the OS-level autofill.
+// desktop the same button imports a vCard (.vcf) file instead, which the
+// user shares from the Contacts app; it is read in the browser, never uploaded.
 function hasContactPickerAPI(): boolean {
     return typeof navigator !== 'undefined' && 'contacts' in navigator && 'ContactsManager' in window;
 }
@@ -35,13 +36,54 @@ export default function InviteesSelector({
     const [showForm, setShowForm] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
     const [isImporting, setIsImporting] = useState(false);
+    const fileInputRef = useRef<HTMLInputElement>(null);
     const canImportNatively = hasContactPickerAPI();
+
+    const handleVCardFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const files = Array.from(e.target.files || []);
+        e.target.value = ''; // permite elegir el mismo archivo otra vez
+        if (files.length === 0) return;
+        if (files.some(f => f.size > VCARD_MAX_BYTES)) { toast.error('El archivo es demasiado grande'); return; }
+
+        setIsImporting(true);
+        try {
+            const parsed = (await Promise.all(files.map(f => f.text()))).flatMap(parseVCards);
+            if (parsed.length === 0) { toast.error('No encontramos contactos con nombre y teléfono o correo en el archivo'); return; }
+
+            let added = 0;
+            for (const c of parsed) {
+                const phone = c.phone ? normalizePhone(c.phone) : null;
+                // Si ya lo tiene guardado (mismo teléfono o correo), lo reutiliza en vez de duplicarlo.
+                const existing = contacts.find(x =>
+                    (phone && x.whatsapp_phone && normalizePhone(x.whatsapp_phone) === phone) ||
+                    (c.email && x.email && x.email.toLowerCase() === c.email.toLowerCase()));
+                if (existing) { onAddInvitee(existing); added++; continue; }
+                const result = await saveContactAction(user?.id || '', {
+                    first_name: c.first_name || 'Invitado',
+                    last_name: c.last_name,
+                    email: c.email,
+                    whatsapp_phone: phone,
+                });
+                if (result.success && result.contact) { onAddInvitee(result.contact as any); added++; }
+                else console.error('Error saving contact from vCard:', result.error);
+            }
+            if (added > 0) {
+                onContactSaved?.();
+                toast.success(`${added} contacto${added > 1 ? 's' : ''} añadido${added > 1 ? 's' : ''}`);
+            } else {
+                toast.error('No se pudo guardar el contacto');
+            }
+        } catch (err) {
+            console.error('Error importing vCard:', err);
+            toast.error('No se pudo leer el archivo');
+        } finally {
+            setIsImporting(false);
+        }
+    };
 
     const handleAgendaSearch = async () => {
         if (!canImportNatively) {
-            // iOS / desktop: no native picker available, fall back to the
-            // manual form so the OS autofill (Contacts/keychain) can help.
-            setShowForm(true);
+            fileInputRef.current?.click();
             return;
         }
 
@@ -134,10 +176,18 @@ export default function InviteesSelector({
                     onClick={handleAgendaSearch}
                     className="py-2 bg-blue-50 text-blue-700 rounded-xl hover:bg-blue-100 font-medium text-sm flex items-center justify-center gap-2 disabled:opacity-50"
                 >
-                    <Search className="w-4 h-4" />
-                    {isImporting ? 'Importando...' : 'Búsqueda en agenda de contactos'}
+                    {canImportNatively ? <Search className="w-4 h-4" /> : <FileUp className="w-4 h-4" />}
+                    {isImporting ? 'Importando...' : canImportNatively ? 'Búsqueda en agenda de contactos' : 'Importar tarjeta de contacto'}
                 </button>
             </div>
+            {!canImportNatively && (
+                <>
+                    <input ref={fileInputRef} type="file" multiple accept=".vcf,.vcard,text/vcard,text/x-vcard,text/directory" className="hidden" onChange={handleVCardFile} />
+                    <p className="text-xs text-gray-500">
+                        En el iPhone: abre Contactos, elige a la persona, toca Compartir contacto → Guardar en Archivos, y selecciónala aquí.
+                    </p>
+                </>
+            )}
 
             {showForm && (
                 <div className="bg-white/50 backdrop-blur-sm p-4 rounded-2xl border border-dashed border-gray-200 animate-in fade-in zoom-in duration-200">

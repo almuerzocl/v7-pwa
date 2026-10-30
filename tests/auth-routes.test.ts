@@ -14,7 +14,8 @@ vi.mock('@supabase/supabase-js', () => ({ createClient: () => ({ auth: { signInW
 
 import { POST as enlaceMagico } from '../src/app/api/auth/enlace-magico/route';
 import { POST as recuperar } from '../src/app/api/auth/recuperar/route';
-import { POST as cambiar, RECENT_SESSION_MS } from '../src/app/api/auth/cambiar-contrasena/route';
+import { POST as cambiar } from '../src/app/api/auth/cambiar-contrasena/route';
+import { RECENT_SESSION_MS } from '../src/lib/recent-session';
 
 const req = (body: unknown, headers: Record<string, string> = {}) =>
     new Request('http://localhost/x', { method: 'POST', headers: { 'content-type': 'application/json', ...headers }, body: typeof body === 'string' ? body : JSON.stringify(body) });

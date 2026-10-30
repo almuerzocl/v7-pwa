@@ -1,9 +1,10 @@
 "use server";
 
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { verifyUser } from "@/utils/supabase/auth-check";
+import { createClient as createSessionClient } from "@/utils/supabase/server";
 
-let _supabaseAdmin: ReturnType<typeof createClient> | null = null;
+let _supabaseAdmin: SupabaseClient<any> | null = null;
 function supabaseAdmin() {
     if (!_supabaseAdmin) {
         _supabaseAdmin = createClient(
@@ -14,7 +15,7 @@ function supabaseAdmin() {
     return _supabaseAdmin;
 }
 
-// Fire-and-forget: link user_id on manual orders matched by email/phone
+// Fire-and-forget: link user_id on manual orders matched by verified email
 // so future user_id-based queries also find them.
 async function backfillTakeawayUserId(orders: any[], userId: string) {
     const toBackfill = orders.filter((o) => !o.user_id);
@@ -38,15 +39,14 @@ export async function fetchUserOrdersAction(userId: string) {
     try {
         const selectStr = '*, restaurant:restaurants(name, address, id)';
 
-        // Fetch user's email and phone so we can match manual orders that predate account linking
-        const { data: profile } = await supabaseAdmin()
-            .from('profiles')
-            .select('email, phone_number')
-            .eq('id', userId)
-            .maybeSingle();
-
-        const userEmail = profile?.email ?? null;
-        const userPhone = profile?.phone_number ?? null;
+        // Un pedido sin dueño (pedido manual del local) solo se asocia por el correo VERIFICADO de la cuenta de acceso.
+        // Ni el teléfono ni el correo del perfil sirven: el usuario los edita, y vincular (user_id queda para siempre)
+        // le daría el ticket completo de un pedido ajeno. Misma regla que "Mis reservas" (my-tickets-actions.ts).
+        const session = await createSessionClient();
+        const { data: { user: authUser } } = await session.auth.getUser();
+        const verifiedEmail = authUser?.id === userId && authUser.email && authUser.email_confirmed_at
+            ? authUser.email.toLowerCase()
+            : null;
 
         const baseQuery = () =>
             supabaseAdmin()
@@ -55,17 +55,13 @@ export async function fetchUserOrdersAction(userId: string) {
                 .order('created_at', { ascending: false })
                 .limit(150);
 
-        // Three parallel queries mirroring the reservations page pattern:
-        // 1. user_id match (normal flow + manual orders already linked)
-        // 2. customer_phone match (manual orders, unlinked)
-        // 3. metadata->customer_email match (manual orders, unlinked)
+        // Dos consultas en paralelo:
+        // 1. user_id (flujo normal y pedidos manuales ya vinculados)
+        // 2. metadata->customer_email (pedidos manuales sin dueño), solo con correo verificado
         const queries = [
             baseQuery().eq('user_id', userId),
-            ...(userPhone
-                ? [baseQuery().is('user_id', null).eq('customer_phone', userPhone)]
-                : []),
-            ...(userEmail
-                ? [baseQuery().is('user_id', null).filter('metadata->>customer_email', 'eq', userEmail)]
+            ...(verifiedEmail
+                ? [baseQuery().is('user_id', null).filter('metadata->>customer_email', 'eq', verifiedEmail)]
                 : []),
         ];
 

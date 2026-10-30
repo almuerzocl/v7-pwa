@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { createClient as createSessionClient } from "@/utils/supabase/server";
 import { rateLimit } from "@/lib/rate-limit";
 import { isRelatedToTicket, signViewerToken, type TicketViewerKind } from "@/lib/ticket-viewer-token";
@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
 const CODE_RE = /^[A-Z0-9]{4,12}$/;
 const noStore = { "Cache-Control": "no-store, max-age=0" };
 
-let _admin: ReturnType<typeof createClient> | null = null;
+let _admin: SupabaseClient<any> | null = null;
 function admin() {
     if (!_admin) {
         _admin = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!, {

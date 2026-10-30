@@ -114,31 +114,39 @@ export default function CartPage() {
         return () => { cancelled = true; };
     }, [restaurantId]);
 
+    const [formError, setFormError] = useState<string | null>(null);
+    // El aviso queda visible en la pantalla (y se anuncia a lectores de pantalla), además del toast temporal.
+    const fail = (msg: string) => {
+        setFormError(msg);
+        toast.error(msg);
+    };
+
     const handleCheckout = async () => {
         if (!user || !profile) {
-            toast.error("Debes iniciar sesión para realizar un pedido");
+            fail("Debes iniciar sesión para realizar un pedido");
             return;
         }
 
         if (items.length === 0) return;
+        setFormError(null);
 
         if (hasMixedRestaurants) {
-            toast.error("Los pedidos para llevar deben ser uno por cada restaurante. Por favor, retire los productos marcados e intente nuevamente");
+            fail("Los pedidos para llevar deben ser uno por cada restaurante. Por favor, retire los productos marcados e intente nuevamente");
             return;
         }
 
         if (!slotsLoading && availableSlots.length === 0) {
-            toast.error("El restaurante ya no recibe pedidos para hoy");
+            fail("El restaurante ya no recibe pedidos para hoy");
             return;
         }
 
         if (!pickupTime) {
-            toast.error("Por favor, selecciona un horario de retiro");
+            fail("Por favor, selecciona un horario de retiro");
             return;
         }
 
         if (selectedDiscount && !discountDisclaimerAccepted) {
-            toast.error("Confirma el aviso del descuento con \"OK, Entendido\" o elige \"No quiero descuento\"");
+            fail("Confirma el aviso del descuento con \"OK, Entendido\" o elige \"No quiero descuento\"");
             return;
         }
 
@@ -149,13 +157,13 @@ export default function CartPage() {
         try {
             const shortages = await checkAvailability(supabase, items);
             if (shortages.length > 0) {
-                shortages.forEach((sh) => toast.error(formatShortage(sh)));
+                fail(shortages.map((sh) => formatShortage(sh)).join(" "));
                 setLoading(false);
                 return;
             }
         } catch (err) {
             console.error("[Cart] Stock check error:", err);
-            toast.error("No pudimos verificar el stock. Intenta nuevamente.");
+            fail("No pudimos verificar el stock. Intenta nuevamente.");
             setLoading(false);
             return;
         }
@@ -288,12 +296,19 @@ export default function CartPage() {
                 </Button>
                 <div className="space-y-0.5">
                     <h1 className="text-2xl font-black tracking-tight text-foreground">Tu Pedido</h1>
-                    <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider">{itemCount} Items seleccionados</p>
+                    <p className="text-xs text-muted-foreground font-bold uppercase tracking-wider">{itemCount} Items seleccionados</p>
                 </div>
             </header>
 
             {items.length > 0 ? (
                 <>
+                    {formError && (
+                        <div role="alert" className="bg-destructive/10 border border-destructive/30 text-destructive rounded-2xl p-4 flex items-start gap-3">
+                            <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" aria-hidden="true" />
+                            <p className="text-sm font-semibold leading-snug flex-1">{formError}</p>
+                            <button type="button" onClick={() => setFormError(null)} className="min-h-11 px-3 text-xs font-bold underline">Entendido</button>
+                        </div>
+                    )}
                     <div className="space-y-3">
                         {hasMixedRestaurants && (
                             <div className="bg-destructive/10 border border-destructive/30 text-destructive rounded-2xl p-4 flex items-start gap-3">
@@ -335,7 +350,7 @@ export default function CartPage() {
                                     {item.options && item.options.length > 0 && (
                                         <p className="text-xs text-muted-foreground leading-snug break-words">{optionsSummary(item.options)}</p>
                                     )}
-                                    <p className="text-[10px] text-muted-foreground font-bold uppercase">{item.restaurantName}</p>
+                                    <p className="text-xs text-muted-foreground font-bold uppercase">{item.restaurantName}</p>
                                     <div className="flex justify-between items-center pt-2">
                                         <span className="font-extrabold text-primary text-base">
                                             {formatCurrency(item.price * item.quantity)}
@@ -371,7 +386,7 @@ export default function CartPage() {
                         <div className="pt-4 border-t border-primary/10 flex justify-between items-center">
                             <div className="space-y-1">
                                 <span className="text-lg font-black text-foreground block">Total a pagar</span>
-                                <span className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest leading-none block">
+                                <span className="text-xs uppercase font-bold text-muted-foreground tracking-widest leading-none block">
                                     Pago y retiro presencial
                                 </span>
                             </div>
@@ -434,7 +449,7 @@ export default function CartPage() {
                                 rows={3}
                                 className="w-full bg-card border border-border rounded-[1.25rem] px-5 py-4 font-medium text-sm text-foreground resize-none shadow-sm focus:outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring placeholder:text-muted-foreground/50"
                             />
-                            <span className="absolute bottom-3 right-4 text-[10px] font-bold text-muted-foreground/50">
+                            <span className="absolute bottom-3 right-4 text-xs font-bold text-muted-foreground/50">
                                 {specialRequests.length}/300
                             </span>
                         </div>

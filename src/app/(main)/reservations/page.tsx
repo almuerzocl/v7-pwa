@@ -9,7 +9,7 @@ import { format, startOfDay, addDays } from "date-fns";
 import { es } from "date-fns/locale";
 import {
     Calendar, MapPin, Users, Clock, X,
-    CheckCircle2, XCircle, CalendarPlus, Star, ArrowLeft,
+    CheckCircle2, XCircle, CalendarPlus, Star, ArrowLeft, UserPlus,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "react-hot-toast";
@@ -22,6 +22,7 @@ import {
 } from "@/lib/core-business/ui-helpers";
 import { TICKET_URL } from "@/lib/config";
 import { TicketFrame } from "@/components/TicketFrame";
+import ReservationGuestsSheet from "@/components/blocks/ReservationGuestsSheet";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -126,6 +127,7 @@ function ReservationRow({
     viewFilter,
     onStatusChange,
     onOpenTicket,
+    onRefresh,
 }: {
     res: any;
     index: number;
@@ -133,6 +135,7 @@ function ReservationRow({
     viewFilter: ViewFilter;
     onStatusChange: (id: string, newStatus: string) => void;
     onOpenTicket: (code: string) => void;
+    onRefresh: () => void;
 }) {
     const status      = (res.status || "PENDIENTE").toUpperCase();
     const isOrganizer = res.organizer_id === userId;
@@ -141,6 +144,7 @@ function ReservationRow({
     const [checkingIn,    setCheckingIn]    = useState(false);
     const [cancelling,    setCancelling]    = useState(false);
     const [confirmCancel, setConfirmCancel] = useState(false);
+    const [showGuests,     setShowGuests]     = useState(false);
 
     useEffect(() => {
         setCalAdded(!!localStorage.getItem(calKey(res.id)));
@@ -200,8 +204,10 @@ function ReservationRow({
     const isExpiredView = viewFilter === "expired";
     const canCheckIn  = isOrganizer && !isExpiredView && (status === "CONFIRMADA" || status === "PENDIENTE");
     const canCancel   = isOrganizer && !isExpiredView && (status === "PENDIENTE" || status === "CONFIRMADA");
+    // Solo el organizador invita, hasta la hora de la reserva y mientras siga PENDIENTE o CONFIRMADA.
+    const canInvite   = isOrganizer && !isExpiredView && (status === "CONFIRMADA" || status === "PENDIENTE") && new Date(res.date_time).getTime() > Date.now();
     const canCalendar = !calAdded && !isExpiredView;
-    const hasActions  = canCalendar || canCheckIn || canCancel;
+    const hasActions  = canCalendar || canCheckIn || canCancel || canInvite;
 
     return (
         <>
@@ -219,24 +225,24 @@ function ReservationRow({
                                 {res.restaurant?.name || "Restaurante"}
                             </h3>
                             {!isOrganizer && (
-                                <span className="text-[10px] text-primary font-semibold">Soy invitado</span>
+                                <span className="text-xs text-primary font-semibold">Soy invitado</span>
                             )}
                         </div>
                         <span
-                            className={`shrink-0 text-[9px] font-bold px-2 py-0.5 rounded-full border ${getBusinessStatusStyles(res.status)}`}
+                            className={`shrink-0 text-xs font-bold px-2 py-0.5 rounded-full border ${getBusinessStatusStyles(res.status)}`}
                         >
                             {getBusinessStatusLabel(res.status, "RESERVATION")}
                         </span>
                     </div>
 
                     {res.restaurant?.address && (
-                        <p className="flex items-center gap-1 text-[11px] text-muted-foreground mb-2.5 truncate">
+                        <p className="flex items-center gap-1 text-xs text-muted-foreground mb-2.5 truncate">
                             <MapPin className="w-3 h-3 shrink-0" />
                             <span className="truncate">{formatAddress(res.restaurant.address)}</span>
                         </p>
                     )}
 
-                    <div className="flex flex-wrap gap-3 text-[11px] font-medium text-foreground/70">
+                    <div className="flex flex-wrap gap-3 text-xs font-medium text-foreground/70">
                         <span className="flex items-center gap-1">
                             <Calendar className="w-3.5 h-3.5 text-primary" />
                             {res.date_time
@@ -261,17 +267,26 @@ function ReservationRow({
                     {canCalendar && (
                         <button
                             onClick={handleCalendar}
-                            className="text-[9px] font-bold px-2 py-2 rounded-xl bg-primary/10 text-primary hover:bg-primary/20 transition-colors flex flex-col items-center gap-0.5"
+                            className="text-xs font-bold px-2 py-2 rounded-xl bg-primary/10 text-primary hover:bg-primary/20 transition-colors flex flex-col items-center gap-0.5"
                         >
                             <CalendarPlus className="w-4 h-4" />
                             Calendario
+                        </button>
+                    )}
+                    {canInvite && (
+                        <button
+                            onClick={() => setShowGuests(true)}
+                            className="text-xs font-bold px-2 py-2 rounded-xl bg-sky-50 text-sky-700 hover:bg-sky-100 transition-colors flex flex-col items-center gap-0.5"
+                        >
+                            <UserPlus className="w-4 h-4" />
+                            Invitados
                         </button>
                     )}
                     {canCheckIn && (
                         <button
                             onClick={handleCheckIn}
                             disabled={checkingIn}
-                            className="text-[9px] font-bold px-2 py-2 rounded-xl bg-emerald-100 text-emerald-700 hover:bg-emerald-200 transition-colors flex flex-col items-center gap-0.5 disabled:opacity-50"
+                            className="text-xs font-bold px-2 py-2 rounded-xl bg-emerald-100 text-emerald-700 hover:bg-emerald-200 transition-colors flex flex-col items-center gap-0.5 disabled:opacity-50"
                         >
                             <CheckCircle2 className="w-4 h-4" />
                             {checkingIn ? "..." : "Check-in"}
@@ -281,17 +296,21 @@ function ReservationRow({
                         <button
                             onClick={handleCancel}
                             disabled={cancelling}
-                            className="text-[9px] font-bold px-2 py-2 rounded-xl bg-rose-50 text-rose-600 hover:bg-rose-100 transition-colors flex flex-col items-center gap-0.5 disabled:opacity-50"
+                            className="text-xs font-bold px-2 py-2 rounded-xl bg-rose-50 text-rose-600 hover:bg-rose-100 transition-colors flex flex-col items-center gap-0.5 disabled:opacity-50"
                         >
                             <XCircle className="w-4 h-4" />
                             {cancelling ? "..." : "Cancelar"}
                         </button>
                     )}
                     {!hasActions && (
-                        <span className="text-[9px] text-muted-foreground text-center">—</span>
+                        <span className="text-xs text-muted-foreground text-center">—</span>
                     )}
                 </div>
             </div>
+
+            {showGuests && (
+                <ReservationGuestsSheet res={res} onClose={() => setShowGuests(false)} onChanged={onRefresh} />
+            )}
 
             {/* Late-cancel confirmation */}
             {confirmCancel && (
@@ -354,9 +373,9 @@ export default function ReservationsPage() {
     const userId    = user?.id;
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    const fetchAll = useCallback(async () => {
+    const fetchAll = useCallback(async (silent = false) => {
         if (!userId) return;
-        setLoading(true);
+        if (!silent) setLoading(true);
         setFetchError(null);
         try {
             // Lectura en el servidor (sesión validada con auth.getUser()): organizador + invitado por
@@ -447,7 +466,7 @@ export default function ReservationsPage() {
                     </h1>
                 </div>
                 {reputation !== null && (
-                    <span className="bg-green-100 text-green-700 text-[10px] font-bold px-3 py-1.5 rounded-full border border-green-200 flex items-center gap-1.5">
+                    <span className="bg-green-100 text-green-700 text-xs font-bold px-3 py-1.5 rounded-full border border-green-200 flex items-center gap-1.5">
                         <Star className="w-3 h-3 fill-green-500 text-green-500" />
                         {formatReputation(reputation)}
                     </span>
@@ -463,7 +482,7 @@ export default function ReservationsPage() {
                         <button
                             key={v}
                             onClick={() => setView(v)}
-                            className={`flex-1 py-2 rounded-xl text-[11px] font-bold transition-all flex items-center justify-center gap-1 ${
+                            className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1 ${
                                 view === v
                                     ? "bg-background shadow-sm text-foreground"
                                     : "text-muted-foreground hover:text-foreground/70"
@@ -471,7 +490,7 @@ export default function ReservationsPage() {
                         >
                             {label}
                             {!loading && count > 0 && (
-                                <span className={`text-[9px] font-black px-1.5 py-0.5 rounded-full ${
+                                <span className={`text-xs font-black px-1.5 py-0.5 rounded-full ${
                                     view === v ? "bg-primary text-white" : "bg-muted-foreground/20 text-muted-foreground"
                                 }`}>
                                     {count}
@@ -488,7 +507,7 @@ export default function ReservationsPage() {
                     <button
                         key={r}
                         onClick={() => setRole(r)}
-                        className={`flex-1 py-2 rounded-xl text-[11px] font-bold transition-all ${
+                        className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all ${
                             role === r
                                 ? "bg-background shadow-sm text-foreground"
                                 : "text-muted-foreground hover:text-foreground/70"
@@ -504,8 +523,8 @@ export default function ReservationsPage() {
                 <div className="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 flex items-center justify-between gap-3">
                     <p className="text-xs font-bold text-rose-700 flex-1">{fetchError}</p>
                     <button
-                        onClick={fetchAll}
-                        className="text-[11px] font-black text-rose-600 underline underline-offset-2 shrink-0"
+                        onClick={() => fetchAll()}
+                        className="text-xs font-black text-rose-600 underline underline-offset-2 shrink-0"
                     >
                         Reintentar
                     </button>
@@ -540,6 +559,7 @@ export default function ReservationsPage() {
                             viewFilter={view}
                             onStatusChange={handleStatusChange}
                             onOpenTicket={setModalCode}
+                            onRefresh={() => fetchAll(true)}
                         />
                     ))}
                 </div>

@@ -68,8 +68,8 @@ export function OptionSheet({ open, name, basePrice, groups, onClose, onAdd }: O
                             <fieldset key={g.id} ref={(el) => { groupRefs.current[g.id] = el; }} aria-describedby={err ? errId : undefined} className="min-w-0">
                                 <legend className="mb-1 flex w-full items-center gap-2">
                                     <span className="text-sm font-black text-slate-900">{g.name}</span>
-                                    <span className={`rounded-full px-2 py-0.5 text-[11px] font-bold ${g.required ? "bg-slate-900 text-white" : "bg-slate-100 text-slate-700"}`}>{g.required ? "Obligatorio" : "Opcional"}</span>
-                                    <span className="text-[11px] text-slate-600">{hintOf(g)}</span>
+                                    <span className={`rounded-full px-2 py-0.5 text-xs font-bold ${g.required ? "bg-slate-900 text-white" : "bg-slate-100 text-slate-700"}`}>{g.required ? "Obligatorio" : "Opcional"}</span>
+                                    <span className="text-xs text-slate-600">{hintOf(g)}</span>
                                 </legend>
                                 <ul className="divide-y divide-slate-100 rounded-2xl border border-slate-200">
                                     {g.kind === "single" && !g.required && (
@@ -99,7 +99,7 @@ export function OptionSheet({ open, name, basePrice, groups, onClose, onAdd }: O
                                         );
                                     })}
                                 </ul>
-                                {atMax && <p className="mt-1 text-[11px] text-slate-600">Llegaste al máximo de este grupo.</p>}
+                                {atMax && <p className="mt-1 text-xs text-slate-600">Llegaste al máximo de este grupo.</p>}
                                 {err && <p id={errId} role="alert" className="mt-1 text-xs font-bold text-red-700">{g.min_select === 1 ? "Elige una opción para continuar." : `Elige al menos ${g.min_select} opciones para continuar.`}</p>}
                             </fieldset>
                         );
