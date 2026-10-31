@@ -103,7 +103,7 @@ export default function RootLayout({
           </LocationProvider>
         </AuthProvider>
         {/* GA4: solo carga si la persona acepta las cookies analíticas en el aviso */}
-        <ConsentAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID || "G-SY7WXTXF2L"} />
+        <ConsentAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID || "G-Q31E5NMWTK"} />
       </body>
     </html>
   );
