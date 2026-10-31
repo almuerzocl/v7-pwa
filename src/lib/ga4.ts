@@ -1,5 +1,5 @@
 // GA4 Analytics Utilities for the PWA
-export const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || 'G-SY7WXTXF2L';
+export const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || 'G-Q31E5NMWTK';
 
 // Window type augmentation handled by @next/third-parties/google
 
